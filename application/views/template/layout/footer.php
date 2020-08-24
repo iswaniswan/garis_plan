@@ -20,10 +20,7 @@
   <script src="<?= base_url('assets/vendor/fullcalendar/dist/fullcalendar.min.js');?> "></script>
   <script src="<?= base_url('assets/vendor/bootstrap-daterangepicker/daterangepicker.js'); ?>"></script>
   <script src="<?= base_url('assets/vendor/bootstrap-timepicker/js/bootstrap-timepicker.min.js'); ?>"></script>
-  <script src="<?= base_url('assets/vendor/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js'); ?>"></script>
-  <script src="<?= base_url('assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js'); ?>"></script>
   <script src="<?= base_url('assets/vendor/select2/dist/js/select2.full.min.js'); ?>"></script>
-  <script src="<?= base_url('assets/vendor/selectric/public/jquery.selectric.min.js'); ?>"></script>
 
   <!-- Template JS File -->
   <script src="<?= base_url('assets/js/custom.js'); ?>"></script>

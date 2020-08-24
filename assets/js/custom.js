@@ -44,7 +44,6 @@ $(document).ready(function(){
 
     function loadUpcomingSchedule(data){
         let schEl = $('#mySchedule');
-        console.log("func loadupcomingschedule", data);
         let newEl, dtStr;
         for(let i=0; i<data.length; i++){
             dtStr = (data[i].start === data[i].end ? data[i].start : data[i].start + ' - ' + data[i].end);
@@ -98,7 +97,6 @@ $(document).ready(function(){
                     });
                 }
             });  
-            console.log("company events : ", companyEvents);
             loadUpcomingSchedule(companyEvents);            
         });
     };
@@ -117,7 +115,6 @@ $(document).ready(function(){
                 element.empty();
             }
         }).done(function(response){
-            console.log("response : ", response);
             element.append(response);
         });
     };

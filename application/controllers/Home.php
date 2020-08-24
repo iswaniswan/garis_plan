@@ -62,6 +62,10 @@ class Home extends CI_Controller {
 		return $data;
 	}
 
+	public function reserve_room_submit(){
+		
+	}
+
 	public function room(){
 		$q = $this->room->get_all_data();
 		$i=0;
