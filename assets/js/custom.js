@@ -9,6 +9,9 @@
 
 
 $(document).ready(function(){
+    //global var
+    var events_combined = [];
+    
     /**
      * 
      * sidebar menu click
@@ -52,7 +55,65 @@ $(document).ready(function(){
                 data[i].title+'</strong><br/>'+data[i].description+'</p></div>';
             schEl.append(newEl);
         }
-        
+    }
+
+    function getDataHRIS(){
+        let url_api = 'http://172.73.1.94/rest/rest-izin.php/data?tgl=2020-07-01&tgl_end=2020-08-10';
+        $.ajax({
+            url:url_api,
+            cache: false,
+            type:'GET',
+            dataType:'JSON',
+            crossDomain:true,
+        }).done(function(response_api){             
+            const dt_json = response_api.data;
+            console.log('d : ' + dt_json.length);
+
+            // cek data hris
+            let users = [];
+            let counts = {};
+            for(let i=0; i<dt_json.length; i++){
+                if(dt_json[i].nik === '150913' || 
+                    dt_json[i].nik === '000370' || 
+                    dt_json[i].nik === '191101' || 
+                    dt_json[i].nik === '201136'){
+                    continue;
+                }
+                let h_name, h_div, h_dtstart, h_dtend, h_dest;
+                h_name = dt_json[i].nama;
+                h_div = dt_json[i].nama_bag;
+                h_dtstart = dt_json[i].tgl;
+                h_dtend = dt_json[i].tgl_end;
+
+                // cek data hris
+                users.push(h_name);
+
+                let desc = h_name+', '+h_div ;
+                let ev = {
+                    title:'H',
+                    start:h_dtstart,
+                    end:h_dtend,
+                    description: desc,
+                    backgroundColor: '#fd7e14',
+                    borderColor: '#fd7e14',
+                    textColor: '#fafafa'
+                };
+                events_combined.push(ev);
+            }
+
+            // cek data hris
+            jQuery.each(users, function(key, value){
+                if (!counts.hasOwnProperty(value)) {
+                    counts[value] = 1;
+                } else {
+                    counts[value]++;
+                }
+            });
+            console.log(counts);
+
+            console.log("combined 2 : " + events_combined.length);
+            renderCalendar(events_combined);   
+        });
     }
 
     function loadEvents(){
@@ -62,7 +123,6 @@ $(document).ready(function(){
             dataType: "json"
         }).done(function(response){
             const r = response;
-            let nationalEvents = [];
             let companyEvents = [];
             for(let i=0; i<r.length; i++){
                 let event = {
@@ -74,34 +134,46 @@ $(document).ready(function(){
                     borderColor: (r[i].type === 'nasional' ? '#fc544b' : '#3abaf4'),
                     textColor: '#fafafa'
                 };
-                nationalEvents.push(event);
+                events_combined.push(event);
                 if(r[i].type === 'company'){
                     companyEvents.push(event);
                 }
-            }
-            $("#myCalendar").fullCalendar({
-                height: 'auto',
-                header: {
-                  left: 'prev,next today',
-                  center: 'title',
-                  right: 'month,agendaWeek,agendaDay'
-                },
-                selectable: true,
-                editable: false,
-                events:nationalEvents,
-                eventLimit:true,
-                eventAfterRender: function(event, element) {
-                    $(element).tooltip({
-                        title: event.description,
-                        container: "body"
-                    });
-                }
-            });  
-            loadUpcomingSchedule(companyEvents);            
+            }   
+            loadUpcomingSchedule(companyEvents);  
+            console.log("combined 1 : " + events_combined.length);
+            getDataHRIS();
         });
     };
-    loadCalendar(content_page);   
 
+    loadCalendar(content_page); 
+
+    function renderCalendar(events){
+        const dt_events = events;        
+        console.log("events render : " + dt_events.length);
+        $("#myCalendar").fullCalendar({
+            height: 'auto',
+            header: {
+              left: 'prev,next today',
+              center: 'title',
+              right: 'month,agendaWeek,agendaDay'
+            },
+            selectable: true,
+            editable: false,
+            events:events,
+            eventLimit:true,
+            eventLimitText:"more",
+            // eventAfterRender: function(event, element) {
+            //     $(element).tooltip({
+            //         title: event.description,
+            //         container: "body"
+            //     });
+            // }
+            eventRenderWait: 300,
+            eventClick: function(event, jsEvent, view){
+                console.log(event, jsEvent, view)
+            }
+        });  
+    }
 });
 
 (function($){
