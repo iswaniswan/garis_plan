@@ -8,10 +8,8 @@
 "use strict";
 
 
-$(document).ready(function(){
-    //global var
-    var events_combined = [];
-    
+$(document).ready(function(){   
+    var events_combined = []; 
     /**
      * 
      * sidebar menu click
@@ -57,8 +55,10 @@ $(document).ready(function(){
         }
     }
 
-    function getDataHRIS(){
-        let url_api = 'http://172.73.1.94/rest/rest-izin.php/data?tgl=2020-07-01&tgl_end=2020-08-10';
+    function getDataHRIS(events_params){
+        const eventToMerge = events_params;
+        // let url_api = 'http://172.73.1.94/rest/rest-izin.php/data?tgl=2020-07-01&tgl_end=2020-08-10';
+        let url_api = 'http://assetsmanagement.lan/assets/json/data_izin.json';
         $.ajax({
             url:url_api,
             cache: false,
@@ -67,18 +67,12 @@ $(document).ready(function(){
             crossDomain:true,
         }).done(function(response_api){             
             const dt_json = response_api.data;
-            console.log('d : ' + dt_json.length);
+            // console.log('d : ' + dt_json.length);
 
             // cek data hris
-            let users = [];
-            let counts = {};
-            for(let i=0; i<dt_json.length; i++){
-                if(dt_json[i].nik === '150913' || 
-                    dt_json[i].nik === '000370' || 
-                    dt_json[i].nik === '191101' || 
-                    dt_json[i].nik === '201136'){
-                    continue;
-                }
+            let events = [];
+            let eventToSplit = [];
+            for(let i=0; i<50; i++){
                 let h_name, h_div, h_dtstart, h_dtend, h_dest;
                 h_name = dt_json[i].nama;
                 h_div = dt_json[i].nama_bag;
@@ -86,37 +80,56 @@ $(document).ready(function(){
                 h_dtend = dt_json[i].tgl_end;
 
                 // cek data hris
-                users.push(h_name);
-
+                // jika event lebih dari h+1
+                if(h_dtstart !== h_dtend){
+                    console.log("lebih dari h+1");
+                }
+                
                 let desc = h_name+', '+h_div ;
                 let ev = {
                     title:'H',
                     start:h_dtstart,
                     end:h_dtend,
-                    description: desc,
+                    description: '',
                     backgroundColor: '#fd7e14',
                     borderColor: '#fd7e14',
-                    textColor: '#fafafa'
+                    textColor: '#fafafa',
+                    extendedProps: {
+                        start:h_dtstart,
+                        end:h_dtend,
+                        description: desc,
+                        department: h_div,
+                      },
                 };
-                events_combined.push(ev);
-            }
 
-            // cek data hris
-            jQuery.each(users, function(key, value){
-                if (!counts.hasOwnProperty(value)) {
-                    counts[value] = 1;
-                } else {
-                    counts[value]++;
+                let obj = events.find(x => x.start === h_dtstart);
+                let index = events.indexOf(obj);
+                if(index >= 0){
+                    let objs = obj.extendedProps;
+                    let arrObj = [].concat(objs, ev.extendedProps);
+                    let countArr = arrObj.length;
+                    events.fill(obj.title = 'H +' + countArr, index, index++);
+                    events.fill(obj.extendedProps = arrObj, index, index++);
+                }else{
+                    events.push(ev);
                 }
-            });
-            console.log(counts);
 
-            console.log("combined 2 : " + events_combined.length);
+            }
+            // console.log(events);
+            // console.log("e combined : " + eventToMerge);
+            let events_combined = [].concat(eventToMerge, events);
+            // console.log("e combined after : " + events_combined);
             renderCalendar(events_combined);   
         });
     }
 
+    function dateTimeStrToDateStr(dateTimeStr){
+        let dateStr = moment(dateTimeStr).format('YYYY-MM-DD');
+        return moment(dateStr).format('YYYY-MM-DD');
+    }
+
     function loadEvents(){
+        let events = [];
         $.ajax({
             url: 'Home/calendar_events',
             type: "GET",
@@ -125,23 +138,24 @@ $(document).ready(function(){
             const r = response;
             let companyEvents = [];
             for(let i=0; i<r.length; i++){
+                let dtStartStr = dateTimeStrToDateStr(r[i].date_start);
+                let dtEndStr = dateTimeStrToDateStr(r[i].date_end);
                 let event = {
                     title:r[i].celebration,
-                    start:r[i].date_start,
-                    end:r[i].date_end,
+                    start: dtStartStr,
+                    end:dtEndStr,
                     description: (r[i].note !== null ? r[i].note : r[i].celebration),
                     backgroundColor: (r[i].type === 'nasional' ? '#fc544b' : '#3abaf4'),
                     borderColor: (r[i].type === 'nasional' ? '#fc544b' : '#3abaf4'),
                     textColor: '#fafafa'
                 };
-                events_combined.push(event);
+                events.push(event);
                 if(r[i].type === 'company'){
                     companyEvents.push(event);
                 }
             }   
             loadUpcomingSchedule(companyEvents);  
-            console.log("combined 1 : " + events_combined.length);
-            getDataHRIS();
+            getDataHRIS(events);
         });
     };
 
@@ -149,7 +163,6 @@ $(document).ready(function(){
 
     function renderCalendar(events){
         const dt_events = events;        
-        console.log("events render : " + dt_events.length);
         $("#myCalendar").fullCalendar({
             height: 'auto',
             header: {

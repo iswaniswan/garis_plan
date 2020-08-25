@@ -1,17 +1,6 @@
 <!-- override css -->
 <style>
-a.fc-event {
-    border-radius: 8px;
-    /* round edges */
-    height:8px;
-    width: 8px;
-    /* fixed width */
-    color: transparent;
-    /* hide text */
-}
-div.fc-content-skeleton > table > tbody > tr {
-    display: inline-block;
-}
+
 </style>
 
 <div class="section-header">
