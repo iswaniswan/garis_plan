@@ -14,7 +14,16 @@
             </div>
             <div class="card-body">
             <div class="fc-overflow">
-                <div id="myCalendar"></div>
+                <div id="myCalendar">
+                    <div class="row justify-content-center">
+                        <div class="col-4">
+                            <div class="d-flex align-items-center">
+                                <strong>Loading...</strong>
+                                <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             </div>
         </div>
@@ -33,7 +42,7 @@
         </div>
     </div>
 </div>
-
+<script type="text/javascript" src="<?= base_url('assets/vendor/underscore/underscore-min.js'); ?>"></script>
 <script type="text/javascript">
 
 $(document).ready(function(){

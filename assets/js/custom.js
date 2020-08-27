@@ -1,83 +1,277 @@
-/**
- *
- * You can write your JS code here, DO NOT touch the default style file
- * because it will make it harder for you to update.
- *
- */
-
 "use strict";
+/**
+ * Class Event
+ */
+class Event {
+
+    constructor(
+        title, start, end, description, extendedProps, backgroundColor, borderColor, textColor){
+        this.title = title;
+        this.start = start;
+        this.end = end ;
+        this.description = description;
+        this.extendedProps = extendedProps;
+        this.backgroundColor = backgroundColor;
+        this.borderColor = borderColor;
+        this.textColor = textColor;
+    };
+
+    title; start; end; description; extendedProps; backgroundColor; borderColor; textColor;
+
+    toObject(){
+        return {
+            title: this.title,
+            start: this.start,
+            end: this.end,
+            extendedProps: this.extendedProps,
+            backgroundColor: this.backgroundColor,
+            borderColor:  this.borderColor,
+            textColor: this.textColor
+        };
+    }
+}
 /**
  * 
  *  utility funciton
  * 
  */
-function isArray(myArray) {
-    return Array.isArray(myArray);
+
+function dateTimeStrToDateStr(dateTimeStr){
+    let dateStr = moment(dateTimeStr).format('YYYY-MM-DD');
+    return moment(dateStr).format('YYYY-MM-DD');
+}
+
+function include(arr,obj) {
+    return (arr.indexOf(obj) != -1);
+}
+
+function renderCalendar(events){    
+    $("#myCalendar").empty().fullCalendar({
+        height: 'auto',
+        header: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'month,agendaWeek,agendaDay'
+        },
+        defaultDate: '2020-01-01',
+        selectable: true,
+        editable: false,
+        events:events,
+        eventLimit:true,
+        views:{
+            month:{
+                eventLimit:3,
+            }
+        },
+        eventLimitText:"more",
+        // eventAfterRender: function(event, element) {
+        //     $(element).tooltip({
+        //         title: event.description,
+        //         container: "body"
+        //     });
+        // }
+        eventRenderWait: 300,
+        eventClick: function(event){
+            console.log(event);
+        }
+    });  
+}
+
+function titleHris(titleStr, counter){
+    let strCounter = titleStr.replace('hris +', '') || 0;
+    let newCounter = parseInt(strCounter) + counter;
+    return 'hris +' + newCounter.toString();
+}
+/**
+ * 
+ * initialize calendar
+ * 
+ */
+function loadComponentCalendar(element){
+    $.ajax({
+        url: 'Home/calendar',
+        type: "GET",
+        dataType: "text"
+    }).done(function(response){
+        element.append(response);
+        // loadEvents();
+    }); 
+
+    loadEvents();
+
 };
 
-function groupObjectsInsideArray(arrayObj){
-    const array = arrayObj;
-    for(var j=0;j<array.length;j++){
-        var current = array[j];
-        for(var i=j+1; i<array.length; i++){
-          if(current.start = array[i].start){
-            if(!isArray(current.extendedProps))
-              current.extendedProps = [ current.extendedProps ];
-            if(isArray(array[i].extendedProps))
-               for(var v=0; v<array[i].extendedProps.length; v++)
-                 current.extendedProps.push(array[i].extendedProps[v]);
-            else
-              current.extendedProps.push(array[i].extendedProps);
-            array.splice(i,1);
-            i++;
-          }
-        }
-    }
-    return array;
+function loadUpcomingSchedule(data){
+    let schEl = $('#mySchedule');
+    data.sort((a, b) => {
+        return (moment(a, 'YYYY-MM-DD') - moment(b, 'YYYY-MM-DD') ? 1 : -1);
+    })
+    .forEach(item => {
+        let mStart = moment(item.start, 'YYYY-MM-DD');
+        let mEnd = moment(item.end, 'YYYY-MM-DD');
+        let dtStr = (item.start === item.end ? 
+            mStart.format('D MMM YY') : mStart.format('D MMM YY') + ' - ' + mEnd.format('D MMM YY')
+            );
+        let entry = `<div><h5 class="list-schedule">${dtStr}</h5><p class="section-lead">
+            <strong>${item.title}</strong><br/>${item.description}</p></div>`;
+        schEl.append(entry);
+    });
 }
 
-function customFunc(param){
-    const xArray = param;
-    console.log("len " + xArray.length);
-    // find duplicate
-    let counter = 0;
-    
-    for(let i=0; i<xArray.length-1; i++){
-        let iStart = xArray[i].start;
-        for(let j=i+1; j<xArray.length; j++){
-            let jStart = xArray[j].start;
-            if(iStart === jStart){
-                counter += 1
-                
-                let idxI = xArray.map(function (xi){
-                    return xi.start;
-                }).indexOf(iStart);
-                let idxJ = xArray.map(function (xj){
-                    return xj.start;
-                }).indexOf(jStart);
+function getDataHRIS(events_params){
+    const eventToMerge = events_params;
+    // let url_api = 'http://172.73.1.94/rest/rest-izin.php/data?tgl=2020-07-01&tgl_end=2020-08-10';
+    let url_api = 'http://assetsmanagement.lan/assets/json/data_izin.json';
+    $.ajax({
+        url:url_api,
+        cache: false,
+        type:'GET',
+        dataType:'JSON',
+        crossDomain:true,
+    }).done(function(response_api){             
+        const dt_json = response_api.data;
+        let events = [];
+        let backgroundColor= '#fd7e14';
+        let borderColor= '#fd7e14';
+        let textColor= '#fafafa';
 
-                console.log("counter : " + counter + " idxOf : " + idxI + " | idxOf : " + idxJ);
+        for(let i=0; i<dt_json.length; i++){
+            let h_extProps = {
+                start:dt_json[i].tgl,
+                end:dt_json[i].tgl_end,
+                description: dt_json[i].nama,
+                department: dt_json[i].nama_bag,
+            };  
+
+            let event = new Event(
+                1, dt_json[i].tgl, dt_json[i].tgl_end, null, h_extProps, null, null, null
+            );
+
+            if(event.start !== event.end){
+                let eventToSplit = $(this).buildExtendEventsFullCalendar(event);
+                events.push(...eventToSplit);
+            }else{
+                events.push(event);
             }
         }
-        console.log("idx " + i + " " + xArray[i].start);
-    }
 
-    // let obj = array.find(x => x.start === h_dtstart);
-    // let index = events.indexOf(obj);
-    // if(index >= 0){
-    //     let objs = obj.extendedProps;
-    //     let arrObj = [].concat(objs, ev.extendedProps);
-    //     let countArr = arrObj.length;
-    //     events.fill(obj.title = 'H +' + countArr, index, index++);
-    //     events.fill(obj.extendedProps = arrObj, index, index++);                    
-    // }else{
-    //     events.push(ev);
-    // }
-    
+        // grouped events
+        let eventsIndex = [];
+        let groupsEvent = [];
+        // console.log("now length : "+JSON.stringify(events));
+        for(let i=0; i<events.length; i++){
+            if(include(eventsIndex, events[i].start)){
+                let inTo = eventsIndex.map(function(e) { 
+                            return e;
+                        }).indexOf(events[i].start);
+                let count = parseInt(groupsEvent[inTo].title);
+                groupsEvent[inTo].title = count + 1;
+                let ext = [].concat(groupsEvent[inTo].extendedProps, events[i].extendedProps);
+                groupsEvent[inTo].extendedProps = ext;
+            }else{
+                let event = new Event(
+                    1, events[i].start, events[i].end, null, events[i].extendedProps, backgroundColor, borderColor, textColor
+                );
+                groupsEvent.push(event);
+                eventsIndex.push(event.start);
+            }
+        }
+
+        let events_combined = [].concat(eventToMerge, groupsEvent);
+        return events_combined;
+        // renderCalendar(events_combined);   
+    });
 }
 
-$(document).ready(function(){   
-    var events_combined = []; 
+async function loadEvents(){
+    let events = []; // izin hris unsplit
+    let companyEvents = [];
+    let holidayEvents = [];
+
+    const dt_calendar = await fetchCalendarEvents();
+    // console.log(dt_calendar);
+    dt_calendar.forEach(r => {
+        let dtStartStr = dateTimeStrToDateStr(r.date_start);
+        let dtEndStr = dateTimeStrToDateStr(r.date_end);
+        let description = (r.note !== null ? r.note : r.celebration);
+        let backgroundColor = (r.type === 'nasional' ? '#fc544b' : '#3abaf4');
+        let borderColor = backgroundColor;
+        let textColor = '#fafafa';
+
+        let event = new Event(
+            r.celebration, dtStartStr, dtEndStr, description, null, backgroundColor, borderColor, textColor
+        );
+        if(r.type === 'company'){
+            companyEvents.push(event);
+        }else{
+            holidayEvents.push(event);
+        }
+    }); 
+    loadUpcomingSchedule(companyEvents);
+
+    const dt_hris = await fetchDataHris();
+    dt_hris.data.forEach(data => {
+        let backgroundColor= '#fd7e14';
+        let borderColor= backgroundColor;
+        let textColor= '#fafafa';
+        let h_extProps = {
+            start: data.tgl,
+            end: data.tgl_end,
+            description: data.nama,
+            department: data.nama_bag,
+        }; 
+        let event = new Event(
+            "hris +1", data.tgl, data.tgl_end, null, h_extProps, backgroundColor, borderColor, textColor
+        );
+        if(event.start !== event.end){
+            let eventToSplit = $(this).buildExtendEventsFullCalendar(event);
+            events.push(...eventToSplit);
+        }else{
+            events.push(event);
+        }
+    });
+
+    console.log("events len " +companyEvents.length);
+
+    // grouped events
+    let eventsIndex = [];
+    let hrisEvent = [];
+    events.map(x => {
+        if(include(eventsIndex, x.start)){
+            let inTo = eventsIndex.map(function(e) { 
+                        return e;
+                    }).indexOf(x.start);
+            let titleSrc = hrisEvent[inTo].title;
+            hrisEvent[inTo].title = titleHris(titleSrc, 1);
+            let ext = [].concat(hrisEvent[inTo].extendedProps, x.extendedProps);
+            hrisEvent[inTo].extendedProps = ext;
+        }else{
+            let ev = new Event(
+                "hris +1", x.start, x.end, null, x.extendedProps, x.backgroundColor, x.borderColor, x.textColor
+            );
+            hrisEvent.push(ev);
+            eventsIndex.push(ev.start);
+        }
+    });
+
+    let events_combined = [].concat(companyEvents, holidayEvents);
+    events_combined = [].concat(events_combined, hrisEvent);
+    renderCalendar(events_combined);
+};
+
+async function fetchDataHris(){
+    const res = await fetch('http://assetsmanagement.lan/assets/json/data_izin.json');
+    const data = await res.json();
+    return data;
+}
+
+async function fetchCalendarEvents(){
+    const res = await fetch('Home/calendar_events');
+    const data = await res.json();
+    return data;
+}
+
+$(document).ready(function(){  
     /**
      * 
      * sidebar menu click
@@ -94,188 +288,9 @@ $(document).ready(function(){
                 $(this).custom_callback(valid_url, content_page);
             }
         });
-    });
-    /**
-     * 
-     * initialize calendar
-     * 
-     */
-    function loadCalendar(element){
-        $.ajax({
-            url: 'Home/calendar',
-            type: "GET",
-            dataType: "text"
-        }).done(function(response){
-            element.append(response);
-            loadEvents();
-        }); 
-    };
-
-    function loadUpcomingSchedule(data){
-        let schEl = $('#mySchedule');
-        let newEl, dtStr;
-        for(let i=0; i<data.length; i++){
-            dtStr = (data[i].start === data[i].end ? data[i].start : data[i].start + ' - ' + data[i].end);
-            newEl = '<div><h5 class="list-schedule">'+
-                dtStr+'</h5><p class="section-lead"><strong>'+
-                data[i].title+'</strong><br/>'+data[i].description+'</p></div>';
-            schEl.append(newEl);
-        }
-    }
-
-    function getDataHRIS(events_params){
-        const eventToMerge = events_params;
-        // let url_api = 'http://172.73.1.94/rest/rest-izin.php/data?tgl=2020-07-01&tgl_end=2020-08-10';
-        let url_api = 'http://192.168.1.43:1381/assets/json/data_izin.json';
-        $.ajax({
-            url:url_api,
-            cache: false,
-            type:'GET',
-            dataType:'JSON',
-            crossDomain:true,
-        }).done(function(response_api){             
-            const dt_json = response_api.data;
-            // console.log('d : ' + dt_json.length);
-
-            // cek data hris
-            let events = [];
-            for(let i=0; i<10; i++){
-                let eventToSplit = [];
-                let h_name, h_div, h_dtstart, h_dtend, h_dest;
-                h_name = dt_json[i].nama;
-                h_div = dt_json[i].nama_bag;
-                h_dtstart = dt_json[i].tgl;
-                h_dtend = dt_json[i].tgl_end;
-
-                // cek data hris
-                                
-                let desc = h_name+', '+h_div ;
-                let ev = {
-                    title:'H',
-                    start:h_dtstart,
-                    end:h_dtend,
-                    description: '',
-                    backgroundColor: '#fd7e14',
-                    borderColor: '#fd7e14',
-                    textColor: '#fafafa',
-                    extendedProps: {
-                        start:h_dtstart,
-                        end:h_dtend,
-                        description: desc,
-                        department: h_div,
-                      },
-                };
-
-                // jika event lebih dari h+1
-                let isDateRange = false;
-                if(h_dtstart !== h_dtend){
-                    console.log("lebih dari h+1"); 
-                    //  buat object anak sebanyak range tgl
-                    eventToSplit = $(this).buildExtendEventsFullCalendar(ev);
-                    // console.log("eventToSplit : " + eventToSplit[0].start);
-                    events.push(...eventToSplit);
-                    isDateRange = true;
-                    continue;
-                }
-                
-
-                let obj = events.find(x => x.start === h_dtstart);
-                let index = events.indexOf(obj);
-                if(index >= 0){
-                    let objs = obj.extendedProps;
-                    let arrObj = [].concat(objs, ev.extendedProps);
-                    let countArr = arrObj.length;
-                    events.fill(obj.title = 'H +' + countArr, index, index++);
-                    events.fill(obj.extendedProps = arrObj, index, index++);                    
-                }else{
-                    events.push(ev);
-                }
-
-            }
-            // console.log(events.length);
-            
-            // console.log("e combined : " + eventToMerge);
-            let events_combined = [].concat(eventToMerge, events);
-            // final events, group all objects 
-            // let groupedEvents = groupObjectsInsideArray(events_combined);
-            // console.log(JSON.stringify(events_combined));
-            customFunc(events_combined);
-            renderCalendar(events_combined);   
-        });
-    }
-
-    function dateTimeStrToDateStr(dateTimeStr){
-        let dateStr = moment(dateTimeStr).format('YYYY-MM-DD');
-        return moment(dateStr).format('YYYY-MM-DD');
-    }
-
-    function loadEvents(){
-        let events = [];
-        $.ajax({
-            url: 'Home/calendar_events',
-            type: "GET",
-            dataType: "json"
-        }).done(function(response){
-            const r = response;
-            let companyEvents = [];
-            for(let i=0; i<r.length; i++){
-                let dtStartStr = dateTimeStrToDateStr(r[i].date_start);
-                let dtEndStr = dateTimeStrToDateStr(r[i].date_end);
-                let event = {
-                    title:r[i].celebration,
-                    start: dtStartStr,
-                    end:dtEndStr,
-                    description: (r[i].note !== null ? r[i].note : r[i].celebration),
-                    backgroundColor: (r[i].type === 'nasional' ? '#fc544b' : '#3abaf4'),
-                    borderColor: (r[i].type === 'nasional' ? '#fc544b' : '#3abaf4'),
-                    textColor: '#fafafa'
-                };
-                events.push(event);
-                if(r[i].type === 'company'){
-                    companyEvents.push(event);
-                }
-            }   
-            loadUpcomingSchedule(companyEvents);  
-            getDataHRIS(events);
-        });
-    };
-
-    loadCalendar(content_page); 
-
-    function renderCalendar(events){
-        const dt_events = events;        
-        $("#myCalendar").fullCalendar({
-            height: 'auto',
-            header: {
-              left: 'prev,next today',
-              center: 'title',
-              right: 'month,agendaWeek,agendaDay'
-            },
-            defaultDate: '2020-01-01',
-            selectable: true,
-            editable: false,
-            events:events,
-            eventLimit:true,
-            views:{
-                month:{
-                    eventLimit:3,
-                }
-            },
-            eventLimitText:"more",
-            // eventAfterRender: function(event, element) {
-            //     $(element).tooltip({
-            //         title: event.description,
-            //         container: "body"
-            //     });
-            // }
-            eventRenderWait: 300,
-            eventClick: function(event){
-                // console.log(event, jsEvent, view)
-                console.log(event);
-            }
-        });  
-    }
-
+    });    
+    
+    loadComponentCalendar(content_page); 
 
 });
 
@@ -294,57 +309,29 @@ $(document).ready(function(){
         });
     };
 
-    // $.fn.cari_selisih_hari_str = function(dtStartStr, dtEndStr){
-    //     let dtStart = moment(dtStartStr, 'YYYY-MM-DD');
-    //     let dtEnd = moment(dtEndStr, 'YYYY-MM-DD');
-        
-    //     // let differ = moment.duration(dtStart.diff(dtEnd)).asDays();
-    //     let differ = dtEnd.diff(dtStart, 'days');
+    $.fn.buildExtendEventsFullCalendar = function(event){
 
-    //     for(let i=0; i<differ; i++){
-    //         console.log("build events : " + moment(dtStart + i).format('YYYY-MM-DD'));
-    //     }
-    //     // console.log ('selisih '+dtStartStr + ' ke '+dtEndStr + ' : '+differ);
-    //     // return moment(dateStr).format('YYYY-MM-DD');
-    //     return;
-    // };
-
-    $.fn.buildExtendEventsFullCalendar = function(events){
-        const event = events;
-        let title = event.title;
-        // let obj = {"test":"child"};
-        // let extProps = [].concat(event.extendedProps, obj);
-        let extProps = event.extendedProps;
-        let backgroundColor = event.backgroundColor;
-        let borderColor = event.borderColor;
-        let textColor = event.textColor;
-        let dtStart = moment(event.start, 'YYYY-MM-DD');
-        let dtEnd = moment(event.end, 'YYYY-MM-DD');
-        let differ = dtEnd.diff(dtStart, 'days');
-        console.log("differ : " + differ);
-
+        let eventRanged = new Event(
+            event.title, event.start, event.end, event.description, event.extendedProps, event.backgroundColor, event.borderColor, event.textColor
+        );
+        let eventDiff = moment(eventRanged.end, 'YYYY-MM-DD').diff(
+            moment(eventRanged.start, 'YYYY-MM-DD'), 'days'
+        );
+        let description = eventRanged.description;
         let extEvent = [];
-        for(let i=0; i<=differ; i++){
-            // console.log("build events : " + moment(dtStart + i).format('YYYY-MM-DD'));
-            let currDate = moment(dtStart, 'YYYY-MM-DD').add(i, 'days');
+        for(let i=0; i<=eventDiff; i++){
+            let currDate = moment(eventRanged.start, 'YYYY-MM-DD').add(i, 'days');
             let currDateStr = currDate.format('YYYY-MM-DD');
-            
-            
-            let currEvent = {
-                title:title,
-                start:currDateStr,
-                end:currDateStr,
-                extendedProps:extProps,
-                backgroundColor:backgroundColor,
-                borderColor:borderColor,
-                textColor:textColor
-            };
-            extEvent.push(currEvent);
+            let event = new Event(
+                eventRanged.title, currDateStr, currDateStr, description, eventRanged.extendedProps,
+                eventRanged.backgroundColor, eventRanged.borderColor, eventRanged.textColor
+            );
+            extEvent.push(event);
         }
-        // console.log("rebuild Event : "+ JSON.stringify(extEvent));
-        // console.log ('selisih '+dtStartStr + ' ke '+dtEndStr + ' : '+differ);
-        // return moment(dateStr).format('YYYY-MM-DD');
-        return extEvent;
+        // return as array of Event
+        return extEvent; 
     }
 
 }(jQuery));
+
+
