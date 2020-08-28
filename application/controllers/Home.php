@@ -98,4 +98,13 @@ class Home extends CI_Controller {
 		
 		echo phpversion();
 	}
+
+	/**
+	 *  request component 
+	 */
+
+	public function component_table(){
+		$data['c'] = $this->load->view('components/table/table_hover');
+		return $data;
+	}
 }

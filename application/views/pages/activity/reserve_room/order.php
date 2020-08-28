@@ -30,7 +30,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <label>choose room</label>
-                                <select class="form-control" id="select_room" required="" >
+                                <select class="form-control select2" id="select_room" required="" >
                                     <option></option>
                                     <?php 
                                         for($i=0; $i<count($room); $i++){
@@ -106,19 +106,8 @@
                         <div class="row">
                             <div class="col-12">
                                 <label>Add participant</label>
-                                <select class="select2 form-control" name="participant" multiple="" required="">
+                                <select class="select2 form-control" name="participant" multiple="" required="" id="user-selection">
                                     <option value="1">user 1</option>
-                                    <option value="2">user 2</option>
-                                    <option value="3">user 3</option>
-                                    <option value="4">user 4</option>
-                                    <option value="5">user 5</option>
-                                    <option value="6">user 6</option>
-                                    <option value="7">user 7</option>
-                                    <option value="8">user 8</option>
-                                    <option value="9">user 9</option>
-                                    <option value="10">user 10</option>
-                                    <option value="11">user 11</option>
-                                    <option value="12">user 12</option>
                                 </select>
                                 <div class="invalid-feedback">check capacity</div>
                             </div>
@@ -186,7 +175,18 @@ function isParticipantValid(element){
     }
 }
 
+async function getUser(){
+    const dt_json = await fetchUserHris();
+    const users = dt_json.data;
+
+    const cmp_user_list = users.map((user, index) =>{
+        return `<option value="${user.NIK}">${user.Nama.toLowerCase()}</option>`
+    }).join('');
+    $('#user-selection').html(cmp_user_list);
+}
+
 $(document).ready(function(){
+    getUser();
     /**
      * 
      * form parameters

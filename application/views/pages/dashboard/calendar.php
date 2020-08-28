@@ -6,7 +6,7 @@
 <div class="section-header">
     <h1 class="">Dashboard</h1>
 </div>
-<div class="row">
+<div class="row" id="calendar-box">
     <div class="col-md-8 col-sm-12">
         <div class="card">
             <div class="card-header">
@@ -42,7 +42,11 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="<?= base_url('assets/vendor/underscore/underscore-min.js'); ?>"></script>
+
+<div class="row">
+    <div class="col-12" id="box-table-calendar" style="display:none;"></div>
+</div>
+
 <script type="text/javascript">
 
 $(document).ready(function(){

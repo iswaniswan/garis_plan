@@ -30,6 +30,11 @@ class Event {
         };
     }
 }
+
+/**
+ *  CONSTANT
+ */
+const SERVER_API = 'http://192.168.1.43:1381/';
 /**
  * 
  *  utility funciton
@@ -53,7 +58,6 @@ function renderCalendar(events){
           center: 'title',
           right: 'month,agendaWeek,agendaDay'
         },
-        defaultDate: '2020-01-01',
         selectable: true,
         editable: false,
         events:events,
@@ -72,9 +76,58 @@ function renderCalendar(events){
         // }
         eventRenderWait: 300,
         eventClick: function(event){
-            console.log(event);
+            showCalendarDateDetail(event);
         }
     });  
+}
+
+async function showCalendarDateDetail(event){
+    console.log("showCalendarDateDetail -> event", event)
+    // dom table
+    let ev = new Event(
+        event.title, event.start, event.end, event.description, event.extendedProps, event.backgroundColor, event.borderColor, event.textColor
+    );
+    const dt_event = ev.extendedProps;
+    const cmp_table = await `
+        <div class="card">
+            <div class="card-header">
+                <h4 id="table-title">${ev.title} <span class="ml-2 text-dark">(${moment(ev.start, 'YYYY-MM-DD').format('D MMM YYYY')})</span></h4>
+                <div class="card-header-action">
+                    <a class="btn btn-icon btn-info" href="#" onClick="calendarShow(this)"><i class="fas fa-times"></i> Back </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="table-detail-event">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>From</th>
+                                <th>Until</th>
+                                <th>Destination</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${dt_event.extendedProps.map((e, i) => {
+                               return `<tr>
+                                    <td>${i+=1}</td>
+                                    <td>${e.name}</td>
+                                    <td>${e.department}</td>
+                                    <td>${e.start}</td>
+                                    <td>${e.end}</td>
+                                    <td>${e.destination}</td>
+                                </tr>`
+                            }).join("")}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    `;
+    // dom table    
+    calendarHide(cmp_table);
 }
 
 function titleHris(titleStr, counter){
@@ -94,12 +147,42 @@ function loadComponentCalendar(element){
         dataType: "text"
     }).done(function(response){
         element.append(response);
-        // loadEvents();
     }); 
 
     loadEvents();
 
 };
+
+function getComponentTable(){
+    $.ajax({
+        url: 'Home/component_table',
+        type: 'GET',
+        dataType: 'text'
+    }).done(function(response){
+        $('#table-calendar').html(response);
+        calendarHide();
+    });
+}
+
+function calendarHide(element){
+    // from component calendar page
+    $('#calendar-box').fadeOut('fast', function(){
+        $('#box-table-calendar').append(element).show('slow');
+        let dtl_table = $('#table-detail-event');
+        if(dtl_table.length == 1){
+            dtl_table.dataTable();
+        }
+    })
+}
+
+function calendarShow(element){
+    let table = $(element).parents('.card');
+    table.fadeOut('fast', function(){
+        $('#calendar-box').fadeIn('slow');
+        table.remove();
+    })
+    // from component calendar page
+}
 
 function loadUpcomingSchedule(data){
     let schEl = $('#mySchedule');
@@ -115,71 +198,6 @@ function loadUpcomingSchedule(data){
         let entry = `<div><h5 class="list-schedule">${dtStr}</h5><p class="section-lead">
             <strong>${item.title}</strong><br/>${item.description}</p></div>`;
         schEl.append(entry);
-    });
-}
-
-function getDataHRIS(events_params){
-    const eventToMerge = events_params;
-    // let url_api = 'http://172.73.1.94/rest/rest-izin.php/data?tgl=2020-07-01&tgl_end=2020-08-10';
-    let url_api = 'http://assetsmanagement.lan/assets/json/data_izin.json';
-    $.ajax({
-        url:url_api,
-        cache: false,
-        type:'GET',
-        dataType:'JSON',
-        crossDomain:true,
-    }).done(function(response_api){             
-        const dt_json = response_api.data;
-        let events = [];
-        let backgroundColor= '#fd7e14';
-        let borderColor= '#fd7e14';
-        let textColor= '#fafafa';
-
-        for(let i=0; i<dt_json.length; i++){
-            let h_extProps = {
-                start:dt_json[i].tgl,
-                end:dt_json[i].tgl_end,
-                description: dt_json[i].nama,
-                department: dt_json[i].nama_bag,
-            };  
-
-            let event = new Event(
-                1, dt_json[i].tgl, dt_json[i].tgl_end, null, h_extProps, null, null, null
-            );
-
-            if(event.start !== event.end){
-                let eventToSplit = $(this).buildExtendEventsFullCalendar(event);
-                events.push(...eventToSplit);
-            }else{
-                events.push(event);
-            }
-        }
-
-        // grouped events
-        let eventsIndex = [];
-        let groupsEvent = [];
-        // console.log("now length : "+JSON.stringify(events));
-        for(let i=0; i<events.length; i++){
-            if(include(eventsIndex, events[i].start)){
-                let inTo = eventsIndex.map(function(e) { 
-                            return e;
-                        }).indexOf(events[i].start);
-                let count = parseInt(groupsEvent[inTo].title);
-                groupsEvent[inTo].title = count + 1;
-                let ext = [].concat(groupsEvent[inTo].extendedProps, events[i].extendedProps);
-                groupsEvent[inTo].extendedProps = ext;
-            }else{
-                let event = new Event(
-                    1, events[i].start, events[i].end, null, events[i].extendedProps, backgroundColor, borderColor, textColor
-                );
-                groupsEvent.push(event);
-                eventsIndex.push(event.start);
-            }
-        }
-
-        let events_combined = [].concat(eventToMerge, groupsEvent);
-        return events_combined;
-        // renderCalendar(events_combined);   
     });
 }
 
@@ -199,7 +217,7 @@ async function loadEvents(){
         let textColor = '#fafafa';
 
         let event = new Event(
-            r.celebration, dtStartStr, dtEndStr, description, null, backgroundColor, borderColor, textColor
+            r.celebration, dtStartStr, dtEndStr, description, description, backgroundColor, borderColor, textColor
         );
         if(r.type === 'company'){
             companyEvents.push(event);
@@ -215,10 +233,12 @@ async function loadEvents(){
         let borderColor= backgroundColor;
         let textColor= '#fafafa';
         let h_extProps = {
+            name: data.nama,
             start: data.tgl,
             end: data.tgl_end,
-            description: data.nama,
+            description: '',
             department: data.nama_bag,
+            destination: data.tujuan,
         }; 
         let event = new Event(
             "hris +1", data.tgl, data.tgl_end, null, h_extProps, backgroundColor, borderColor, textColor
@@ -230,8 +250,6 @@ async function loadEvents(){
             events.push(event);
         }
     });
-
-    console.log("events len " +companyEvents.length);
 
     // grouped events
     let eventsIndex = [];
@@ -260,7 +278,13 @@ async function loadEvents(){
 };
 
 async function fetchDataHris(){
-    const res = await fetch('http://assetsmanagement.lan/assets/json/data_izin.json');
+    const res = await fetch(SERVER_API + 'assets/json/data_izin.json');
+    const data = await res.json();
+    return data;
+}
+
+async function fetchUserHris(){
+    const res = await fetch(SERVER_API + 'assets/json/hris_user.json');
     const data = await res.json();
     return data;
 }
