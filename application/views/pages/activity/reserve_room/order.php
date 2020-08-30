@@ -242,7 +242,7 @@ $(document).ready(function(){
             let location = $(this).find(":selected").attr("cp_location");
             let room_info = '<p>Facilities : ' + facilities + '<br/>Capacity : ' + capacity + '<br/>Location : ' + location + '</p>';
             $('#room_info').show('slow', function(){
-               $(this).find('.card-body').html(room_info);
+                $(this).find('.card-body').html(room_info); 
             });
         }else{
             hideCard();

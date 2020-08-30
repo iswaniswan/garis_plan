@@ -368,11 +368,11 @@ $(function() {
 
   if(jQuery().summernote) {
     $(".summernote").summernote({
-       dialogsInBody: true,
+      dialogsInBody: true,
       minHeight: 250,
     });
     $(".summernote-simple").summernote({
-       dialogsInBody: true,
+      dialogsInBody: true,
       minHeight: 150,
       toolbar: [
         ['style', ['bold', 'italic', 'underline', 'clear']],

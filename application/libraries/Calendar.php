@@ -14,7 +14,7 @@ class Calendar {
     }
 	
 	public function get_all_data(){
-		return $this->CI->MCalendar->get();
+		return $this->CI->MCalendar->get(null, null, null, null);
     }
     
     public function event_add(){

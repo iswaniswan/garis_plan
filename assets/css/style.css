@@ -3167,3 +3167,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
   font-weight: 600;
   position: relative;
 }
+
+.fc-event{
+    cursor: pointer;
+}

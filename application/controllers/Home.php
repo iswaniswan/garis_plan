@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require_once (APPPATH."libraries/Room.php");
 require_once (APPPATH."libraries/Facility.php");
 require_once (APPPATH."libraries/Calendar.php");
+require_once (APPPATH.'libraries/Utils.php');
 
 class Home extends CI_Controller {
 
@@ -19,6 +20,7 @@ class Home extends CI_Controller {
 		$this->room = new Room();
 		$this->facility = new Facility();
 		$this->calendar = new Calendar();
+        $this->utils = new Utils();
 	}
 
 	public function index(){
@@ -44,7 +46,7 @@ class Home extends CI_Controller {
 	}
 
 	public function reserve_room_new(){
-		$q = $this->room->get_all_data();
+		$q = $this->room->get_room();
 		$i=0;
 		foreach($q as $r){
 			foreach($r as $key=>$val){
@@ -62,34 +64,69 @@ class Home extends CI_Controller {
 		return $data;
 	}
 
-	public function reserve_room_submit(){
-		
-	}
-
 	public function room(){
-		$q = $this->room->get_all_data();
-		$i=0;
-		foreach($q as $r){
-			foreach($r as $key=>$val){
-				$room[$i][$key] = $val;
-			}
-			$i++;
-		}
-		$d['room'] = $room;
+		$d['room'] = $this->room->get_room();
 		$data['t'] = $this->load->view('pages/settings/data/room', $d);
 		return $data;
 	}
 
-	public function facilities(){
-		$q = $this->facility->get_all_data();
-		$i=0;
-		foreach($q as $r){
-			foreach($r as $key=>$val){
-				$fa[$i][$key] = $val;
-			}
-			$i++;
+	public function room_view(){
+		$id = $_POST['id'];
+		$combined['room'] = $this->room->get_room_by_id($id);
+		$combined['facilities'] = $this->facility->get_facilities_id_name();
+		
+		// string array to array conversion
+		if($combined['room'][0]['facilities']){
+			$arr = $this->utils->extract_square_bracket($combined['room'][0]['facilities']);
+			$combined['room'][0]['facilities'] = explode(", ", $arr);
 		}
-		$d['fa'] = $fa;
+		$data['data'] = $combined;
+		echo json_encode($data, true);
+	}
+
+	public function room_insert(){
+		$data['name'] = $_POST['name'];
+		$data['capacity'] = $_POST['capacity'];
+		$data['facilities'] = $_POST['facilities'];
+		$data['floor'] = $_POST['floor'];
+		$data['location'] = $_POST['location'];
+		$result = $this->room->insert_room($data);
+		
+		echo json_encode($result, true);
+	}
+
+	public function room_update(){
+		$data['id'] = $_POST['id'];
+		$data['name'] = $_POST['name'];
+		$data['capacity'] = $_POST['capacity'];
+		$data['facilities'] = $_POST['facilities'];
+		$data['floor'] = $_POST['floor'];
+		$data['location'] = $_POST['location'];
+		$data['is_available'] = $_POST['is_available'];
+		$data['updated_by'] = $_POST['updated_by'];
+		$result = $this->room->update_room($data);
+		
+		echo json_encode($result, true);
+	}
+
+	public function room_update_delete(){
+		$data['id'] = $_POST['id'];
+		$data['updated_by'] = (!empty($_POST['updated_by']) ? $_POST['updated_by'] : 0);
+		$result = $this->room->update_delete_room($data);
+		
+		echo json_encode($result, true);
+	}
+
+	public function room_delete(){
+		$id = $_POST['id'];
+		$result = $this->room->delete_room($id);
+		
+		echo json_encode($result, true);
+	}
+
+	public function facilities(){
+		$q = $this->facility->get_facilities();
+		$d['fa'] = $q;
 		$data['t'] = $this->load->view('pages/settings/data/facilities', $d);
 		return $data;
 	}

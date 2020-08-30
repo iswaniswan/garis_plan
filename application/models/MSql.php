@@ -18,10 +18,12 @@ Class MSql extends CI_Model {
   }
 
   public function get($column='', $where='', $group='', $order=''){
-    $select = ($column !== '' ? $column : ' * ');
+    $select = ($column !== null ? $column : ' * ');
     $sql = $this->select . $select . $this->table;
     if($where != ''){
-        $sql .= $this->where . $where;
+        $sql .= $this->where . $where . ' AND is_deleted=0 ';
+    }else{
+        $sql .= $this->where . $where . ' is_deleted=0';
     }
     if($group != ''){
         $sql .= $this->group . $group;
@@ -37,11 +39,20 @@ Class MSql extends CI_Model {
   }
 
   public function update(){
-
   }
 
-  public function delete(){
+  public function delete($id){
+    $delete = "DELETE " . $this->table . " WHERE id=" . $id . "";
+    $query = $this->db->query($delete);
+    return $this->success_query();
+  }
 
+  public function success_query(){
+    if ($this->db->affected_rows() >= 1) {
+      return true;
+    }else {
+      return false;
+    }
   }
 
 }
