@@ -25,14 +25,32 @@
     </div>
 
     <div class="col-md-4 col-sm-12">
-        <div class="card">
-            <div class="card-header">
-                <h4>Upcoming schedule</h4>
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-success">
+                    <div class="card-header">
+                        <h4>Upcoming schedule</h4>
+                    </div>
+                    <div class="card-body">
+                    <div class="fc-overflow">
+                        <div id="upcoming-schedule"></div>
+                    </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-            <div class="fc-overflow">
-                <div id="mySchedule"></div>
-            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-warning">
+                    <div class="card-header">
+                        <h4>Last events</h4>
+                    </div>
+                    <div class="card-body">
+                    <div class="fc-overflow">
+                        <div id="recent-events"></div>
+                    </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
