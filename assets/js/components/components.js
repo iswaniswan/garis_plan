@@ -129,6 +129,8 @@ class Components {
         return board;
     }
 
+    // components room
+
     formRoom = async function(data){
         const disabled = (data.mode === 'view' ? 'disabled' : '');
         const dt_json = await fetchRoomByID(data.id);     
@@ -145,8 +147,9 @@ class Components {
                         </div>
                     </div>
                     <div class="card-body">
-                        <form action="Home/room_view" methods="POST" class="needs-validation" novalidate="">
-                            <div class="section-title mt-0 mb-5 strong">${data.mode}</div>
+                        <form action="Home/room_view" methods="POST" class="needs-validation" novalidate=""
+                            onsubmit="event.preventDefault(); submitUpdateRoom(this);" id="${data.id}">
+                            <div class="section-title mt-0 mb-5 strong">${data.mode.toUpperCase()}</div>
                             
                             <div class="form-group">
                                 <div class="row">
@@ -172,7 +175,7 @@ class Components {
                                             ${facilities.map((f, i) =>{
                                                 let selected;
                                                 room[0].facilities.map(x =>{
-                                                    if(x == f.id){
+                                                    if(x == f.id || parseInt(x) == f.id){
                                                         selected = 'selected'
                                                     }
                                                 })
@@ -257,5 +260,167 @@ class Components {
         `;
         $(modal).modal('show');        
     }
+
+    formAddRoom = async function(data){
+        const facilities = await fetchFacilities();
+        const form = `
+        <div class="row justify-content-center" id="form_room" style="display:none">
+            <div class="col-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Room</h4>
+                        <div class="card-header-action">
+                            <a class="btn btn-icon btn-info" href="#" onclick="removeForm()"><i class="fas fa-times"></i> Back </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form action="" methods="POST" class="needs-validation" onsubmit="event.preventDefault(); submitNewRoom(this);" 
+                            novalidate="">
+                            <div class="section-title mt-0 mb-5 strong">${data.mode.toUpperCase()}</div>
+                            
+                            <div class="form-group">
+                                <div class="row">
+                                    <!-- name -->
+                                    <div class="col-6">
+                                        <label>Name</label>
+                                        <input type="text" class="form-control" name="name" value="">
+                                        <div class="invalid-feedback">title cannot be empty</div>
+                                    </div>
+                                    <!-- capacity -->
+                                    <div class="col-6">
+                                        <label>Capacity</label>
+                                        <input type="number" class="form-control" name="capacity" required="" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- facility -->
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Facility</label>
+                                        <select class="select2 form-control" name="facilities" multiple="" required="">
+                                            ${facilities.map((f, i) =>{
+                                                return `
+                                                    <option value="${f.id}">${f.name}</option>
+                                                `;
+                                            }).join('')}
+                                        </select>
+                                        <div class="invalid-feedback">title cannot be empty</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- location -->
+                            <div class="form-group">
+                                <div class="row">
+                                    <!-- branch location -->
+                                    <div class="col-6">
+                                        <label>Branch</label>
+                                        <select class="form-control" name="location" required="">
+                                            ${this.BRANCH.map(b => {
+                                                return `
+                                                    <option value="${b}">${b.toUpperCase()}</option>
+                                                `;
+                                            }).join('')}
+                                        </select>
+                                    </div>
+                                    <!-- floor -->
+                                    <div class="col-6">
+                                        <label>Floor</label>
+                                        <input type="number" name="floor" class="form-control" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- is_available -->
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="control-label">Availability</div>
+                                        <label class="custom-switch mt-2" style="padding-left: unset !important;">
+                                            <input type="checkbox" name="is_available" class="custom-switch-input">
+                                            <span class="custom-switch-indicator"></span>
+                                            <span class="custom-switch-description">is room can be used immediately ?</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- submit -->
+                            <div class="form-group mt-5">
+                                <button type="submit" class="btn btn-primary mb-2" name="submit">submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+        return form;
+    }
+
+    // components room end
+
+    // components facility 
+
+    formFacility = async function(data){
+        const disabled = (data.mode === 'view' ? 'disabled' : '');
+        const dt_json = await fetchFacilityById(data.id);     
+        const fac = dt_json;        
+        const form = `
+        <div class="row justify-content-center" id="form_facility" style="display:none">
+            <div class="col-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Facility</h4>
+                        <div class="card-header-action">
+                            <a class="btn btn-icon btn-info" href="#" onclick="removeForm()"><i class="fas fa-times"></i> Back </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form action="Home/room_view" methods="POST" class="needs-validation" novalidate=""
+                            onsubmit="event.preventDefault(); submitUpdateFacility(this);" id="${data.id}">
+                            <div class="section-title mt-0 mb-5 strong">${data.mode.toUpperCase()}</div>
+                            
+                            <div class="form-group">
+                                <div class="row">
+                                    <!-- name -->
+                                    <div class="col-6">
+                                        <label>Name</label>
+                                        <input type="text" class="form-control" name="name" value="${fac[0].name}" ${disabled}>
+                                        <div class="invalid-feedback">title cannot be empty</div>
+                                    </div>
+                                    <!-- capacity -->
+                                    <div class="col-6">
+                                        <label>Condition</label>
+                                        <input type="number" class="form-control" name="capacity" required="" value="${fac[0].condition}" ${disabled}>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- note -->
+                            <div class="form-group">
+                                <div class="row">
+                                    <!-- branch location -->
+                                    <div class="col-12">
+                                        <label>Note</label>
+                                        <textarea class="form-control" name="note">${fac[0].note}</textarea>
+                                    </div>
+                                    <!-- floor -->
+                                    <div class="col-12">
+                                        <label>Last updated</label>
+                                        <input type="text" name="updated_date" class="form-control" value="${fac[0].updated_date}" ${disabled}>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- submit -->
+                            <div class="form-group mt-5">
+                                <button type="submit" class="btn btn-primary mb-2" name="submit" ${disabled}>submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+        return form;
+    }
+
 
 }

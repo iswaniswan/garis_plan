@@ -76,9 +76,15 @@ class Home extends CI_Controller {
 		$combined['facilities'] = $this->facility->get_facilities_id_name();
 		
 		// string array to array conversion
-		if($combined['room'][0]['facilities']){
-			$arr = $this->utils->extract_square_bracket($combined['room'][0]['facilities']);
-			$combined['room'][0]['facilities'] = explode(", ", $arr);
+		if($combined['room'][0]['facilities']){						
+			$q = $this->utils->extract_square_bracket($combined['room'][0]['facilities']);
+			
+			$arr = explode(",", $q);
+			$arrInt = Array();
+			foreach($arr as $key=>$val){
+				$arrInt[] = (int)$val ;
+			}
+			$combined['room'][0]['facilities'] = $arrInt;
 		}
 		$data['data'] = $combined;
 		echo json_encode($data, true);
@@ -89,7 +95,7 @@ class Home extends CI_Controller {
 		$data['capacity'] = $_POST['capacity'];
 		$data['facilities'] = $_POST['facilities'];
 		$data['floor'] = $_POST['floor'];
-		$data['location'] = $_POST['location'];
+		$data['location'] = $_POST['branch'];
 		$result = $this->room->insert_room($data);
 		
 		echo json_encode($result, true);
@@ -101,9 +107,9 @@ class Home extends CI_Controller {
 		$data['capacity'] = $_POST['capacity'];
 		$data['facilities'] = $_POST['facilities'];
 		$data['floor'] = $_POST['floor'];
-		$data['location'] = $_POST['location'];
+		$data['location'] = $_POST['branch'];
 		$data['is_available'] = $_POST['is_available'];
-		$data['updated_by'] = $_POST['updated_by'];
+		$data['updated_by'] = (!empty($_POST['updated_by']) ? $_POST['updated_by'] : 0);
 		$result = $this->room->update_room($data);
 		
 		echo json_encode($result, true);
@@ -129,6 +135,17 @@ class Home extends CI_Controller {
 		$d['fa'] = $q;
 		$data['t'] = $this->load->view('pages/settings/data/facilities', $d);
 		return $data;
+	}
+
+	public function fetchFacilityById(){
+		$id = $_POST['id'];
+		$data = $this->facility->get_facility_by_id($id);
+		echo json_encode($data, true);
+	}
+
+	public function fetchFacilities(){
+		$data = $this->facility->get_facilities_id_name();
+		echo json_encode($data, true);
 	}
 
 	public function test(){

@@ -46,6 +46,19 @@ class Facility {
         return $this->CI->MFacility->get($select, $where, "", "");        
     }
 
+    public function get_facility_by_id($id){
+        $where = " id=" . $id;
+        $query = $this->CI->MFacility->get(null, $where, "", "");   
+        $i=0;
+        foreach($query as $r){
+            foreach($r as $key=>$val){
+                $facilities[$i][$key] = $val;
+            }
+            $i++;
+        }
+        return $facilities;
+    }
+
     public function get_facility_name_by_id($id){
         $ids = $this->utils->extract_square_bracket($id);
         $where = " id IN (" . $ids . ")";

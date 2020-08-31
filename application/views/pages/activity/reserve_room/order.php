@@ -36,13 +36,21 @@
                                         for($i=0; $i<count($room); $i++){
                                             ?>
                                             <option value="<?= $room[$i]['id']; ?>" 
-                                                cp_facilities="<?= $room[$i]['facilities']; ?>"
+                                            <?php 
+                                                $strFacilities = $room[$i]['facilities'];
+                                                $arrStr = explode(', ', $strFacilities);
+                                                $facilities = '';
+                                                foreach ($arrStr as $key=>$val){
+                                                    $facilities .= ($val > 0 ? '' : $val . ', ');
+                                                }
+                                            ?>
+                                                cp_facilities="<?= $facilities; ?>"
                                                 cp_capacity="<?= $room[$i]['capacity']; ?>"
                                                 cp_location="<?= $room[$i]['location']; ?>"
                                                 >
                                                 <?= $room[$i]['name']; ?>
                                             </option>
-                                            <?php
+                                            <?php var_dump($room[$i]['facilities']);
                                         }
                                     ?>
                                 </select>
@@ -240,7 +248,9 @@ $(document).ready(function(){
             let facilities = $(this).find(":selected").attr("cp_facilities");
             let capacity = $(this).find(":selected").attr("cp_capacity");
             let location = $(this).find(":selected").attr("cp_location");
-            let room_info = '<p>Facilities : ' + facilities + '<br/>Capacity : ' + capacity + '<br/>Location : ' + location + '</p>';
+            // let room_info = '<p>Facilities : ' + facilities + '<br/>Capacity : ' + capacity + '<br/>Location : ' + location + '</p>';
+            let room_info = `<p><strong>Facilities</strong> ${facilities} <br/><strong>Capacity</strong> ${capacity} <br/>
+                    <strong>Location</strong> ${location}</p>`;
             $('#room_info').show('slow', function(){
                 $(this).find('.card-body').html(room_info); 
             });

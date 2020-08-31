@@ -60,8 +60,8 @@
                     <i class="fas fa-columns"></i><span>Data</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="<?= base_url('settings/data/room'); ?>">Room</a></li>
-                    <li><a href="<?= base_url('settings/data/facilities'); ?>">Facilities</a></li>
+                    <li><a name="settings-data-room" href="<?= base_url('settings/data/room'); ?>">Room</a></li>
+                    <li><a name="settings-data-facilities" href="<?= base_url('settings/data/facilities'); ?>">Facilities</a></li>
                     <li><a href="<?= base_url('settings/data/vehicle'); ?>">Vehicle</a></li>
                     <li><a href="<?= base_url('settings/data/user'); ?>">User</a></li>
                 </ul>

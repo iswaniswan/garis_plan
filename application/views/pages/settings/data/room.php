@@ -19,6 +19,11 @@ td a.hover {
     <div class="card" id="room_content">
         <div class="card-header">
             <h4 id="table_title">List Room</h4>
+            <div class="card-header-action">
+                <a href="#" class="btn btn-primary" id="0" name="add" onclick="actionRoom(this);">
+                Add room
+                </a>
+            </div>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -43,7 +48,7 @@ td a.hover {
                                 <td class="align-middle"><?= $r['capacity']; ?></td>
                                 <td class="align-middle"><?= strToUpper($r['location']); ?></td>
                                 <td class="align-middle">
-                                    <a href="#" class="btn btn-secondary" name="view" id="<?= $r['id']; ?>" onclick="actionRoom(this)">detail</a>
+                                    <a href="#" class="btn btn-secondary" name="view" id="<?= $r['id']; ?>" onclick="actionRoom(this);">detail</a>
                                     <a href="#" class="btn btn-info" name="edit" id="<?= $r['id']; ?>" onclick="actionRoom(this);">edit</a>
                                     <a href="#" class="btn btn-danger" name="delete" id="<?= $r['id']; ?>" onclick="deleteRoom(this);">delete</a>
                                 </td>
@@ -64,8 +69,13 @@ async function actionRoom(e){
     let params = {
         mode : $(e).attr('name'),
         id: $(e).attr('id')
-    }    
-    let form = await new Components().formRoom(params);
+    }   
+    let form; 
+    if(params.mode === 'add'){
+        form = await new Components().formAddRoom(params);
+    }else{
+        form = await new Components().formRoom(params);
+    }
     
     $('#room_content').fadeOut('fast');
     $('#room_wrapper').append(form);
@@ -88,19 +98,52 @@ function submitDeleteRoom(e){
         url: "Home/room_update_delete",
         data: payload,
         dataType: "json",
-        success: function(data) {
-            console.log(data);
-        },
-        error: function(err) {
-            console.log(err);
+        success: function(response) {
+            console.log(response);
         }
+    }).done(function(){
+        $('.modal').remove();
+        $('.modal-backdrop').remove();
+        $('a[name="settings-data-room"]').trigger('click');
     });
+}
 
+async function submitNewRoom(e){
+    let is_available = ($(e).find('input[name="is_available"]').is(':checked') == true ? 1 : 0);
+
+    let payload = {
+        name: $(e).find('input[name="name"]').val(),
+        capacity: $(e).find('input[name="capacity"]').val(),
+        facilities: $(e).find('.select2').val(),
+        branch: $(e).find('select[name="location"]').val(),
+        floor: $(e).find('input[name="floor"]').val(),
+        is_available: is_available,
+    }
+    const result = await fetchNewRoom(payload);
+    removeForm();
+    
+}
+
+async function submitUpdateRoom(e){
+    let is_available = ($(e).find('input[name="is_available"]').is(':checked') == true ? 1 : 0);
+
+    let payload = {
+        id: $(e).attr('id'),
+        name: $(e).find('input[name="name"]').val(),
+        capacity: $(e).find('input[name="capacity"]').val(),
+        facilities: $(e).find('.select2').val(),
+        branch: $(e).find('select[name="location"]').val(),
+        floor: $(e).find('input[name="floor"]').val(),
+        is_available: is_available,
+    }
+    const result = await fetchUpdateRoom(payload);
+    removeForm();    
 }
 
 function removeForm(){
     $('#form_room').remove();
-    $('#room_content').fadeIn('slow');
+    // $('#room_content').fadeIn('slow');
+    $('a[name="settings-data-room"]').trigger('click');
 }
 
 $(document).ready(function(){
