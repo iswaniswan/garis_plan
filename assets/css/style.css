@@ -3149,6 +3149,9 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
   }
 
 /** custom style */
+.list-schedule.prev:before{
+  background-color: #6c757d !important;
+}
 .list-schedule:before {
   content: ' ';
   border-radius: 5px;

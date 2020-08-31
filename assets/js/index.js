@@ -16,8 +16,7 @@ $(document).ready(function(){
             }
         });
     }); 
-
-    // load calendar as dashboard default view
+    
     $.ajax({
         url: 'Home/calendar',
         type: 'GET',
@@ -25,6 +24,7 @@ $(document).ready(function(){
     }).done(function(response){
         content_page.append(response);
     })
+
 });
 
 (function($){

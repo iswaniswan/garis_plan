@@ -33,7 +33,7 @@
                     </div>
                     <div class="card-body">
                     <div class="fc-overflow">
-                        <div id="upcoming-schedule"></div>
+                        <div id="schedule-next"></div>
                     </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                     </div>
                     <div class="card-body">
                     <div class="fc-overflow">
-                        <div id="recent-events"></div>
+                        <div id="schedule-prev"></div>
                     </div>
                     </div>
                 </div>
@@ -135,8 +135,19 @@ function titleHris(titleStr, counter){
 }
 
 function loadComponentScheduleBoard(data){
-    const list = new Components().scheduleBoard(data);
-    $('#mySchedule').html(list);
+    let eventPrev = [];
+    let eventNext = [];
+    data.map(d=>{
+        return ( moment(d.end, 'YYYY-MM-DD') < moment.now() ? eventPrev.push(d) : eventNext.push(d) )
+    });
+    eventNext.sort((a, b) => (moment(a.start, 'YYYY-MM-DD') - moment(b.start, 'YYYY-MM-DD')) );
+    
+    console.log("loadComponentScheduleBoard -> eventNext", eventNext)
+    const elPrev = new Components().scheduleBoardPrev(eventPrev.slice(0, 2));
+    $('#schedule-prev').html(elPrev);
+
+    const elNext = new Components().scheduleBoardNext(eventNext.slice(0, 2));
+    $('#schedule-next').html(elNext);
 }
 
 async function loadEvents(){

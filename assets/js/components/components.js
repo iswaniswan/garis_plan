@@ -112,11 +112,26 @@ class Components {
         $(modal).modal('show');
     }
 
-    scheduleBoard = function(data){
+    scheduleBoardPrev = function(data){
         const board = `
             ${data.sort((a, b) => {
-                return (moment(a, 'YYYY-MM-DD') - moment(b, 'YYYY-MM-DD') ? 1 : -1);
+                return (moment(a, 'YYYY-MM-DD') - moment(b, 'YYYY-MM-DD'));
             }).map(item => {
+                let mStart = moment(item.start, 'YYYY-MM-DD');
+                let mEnd = moment(item.end, 'YYYY-MM-DD');
+                let dtStr = (item.start === item.end ? 
+                    mStart.format('D MMM YY') : mStart.format('D MMM YY') + ' - ' + mEnd.format('D MMM YY')
+                    );
+                return `<div><h5 class="list-schedule prev">${dtStr}</h5><p class="section-lead">
+                    <strong>${item.title}</strong><br/>${item.description}</p></div>`;
+            }).join('')}
+        `;
+        return board;
+    }
+
+    scheduleBoardNext = function(data){
+        const board = `
+            ${data.map(item => {
                 let mStart = moment(item.start, 'YYYY-MM-DD');
                 let mEnd = moment(item.end, 'YYYY-MM-DD');
                 let dtStr = (item.start === item.end ? 

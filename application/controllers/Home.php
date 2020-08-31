@@ -8,6 +8,9 @@ require_once (APPPATH.'libraries/Utils.php');
 
 class Home extends CI_Controller {
 
+	// just for develeop
+	private $USER;
+
 	private $room;
 	private $facility;
 	private $calendar;
@@ -20,11 +23,20 @@ class Home extends CI_Controller {
 		$this->room = new Room();
 		$this->facility = new Facility();
 		$this->calendar = new Calendar();
-        $this->utils = new Utils();
+		$this->utils = new Utils();
+		
+		$user['name'] = 'iswanto';
+		$user['id'] = '201137';
+		$user['department'] = 'IT';
+		$user['position'] = 'IT Staff';
+		$user['head'] = 'IT Manager';
+		$user['head_indirect'] = 'President Director';
+		$this->USER = $user;
 	}
 
 	public function index(){
-		$data['dashboard'] = 1;
+		// rest user
+		$data['user'] = $this->USER;
 		$this->load->view('index', $data);
 	}
 

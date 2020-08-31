@@ -1,20 +1,27 @@
 /**
  *  CONSTANT
  */
-// const SERVER_API = 'http://assetsmanagement.lan/';
+const SERVER_API = 'http://assetsmanagement.lan/';
 // const SERVER_API = 'http://localhost:1381/';
-const SERVER_API = 'http://172.73.1.94/';
+// const SERVER_API = 'http://172.73.1.94/';
 
-async function fetchDataHris(){
-    // const res = await fetch(SERVER_API + 'assets/json/data_izin.json');
-    const res = await fetch(SERVER_API + 'rest/rest-izin.php/data?tgl=2020-01-01&tgl_end=2020-08-01');
+async function fetchUserprofile(){
+    const res = await fetch(SERVER_API + 'assets/json/hris_profile.json');
     const data = await res.json();
     return data;
 }
 
+async function fetchDataHris(){
+    const res = await fetch(SERVER_API + 'assets/json/data_izin.json');
+    // const res = await fetch(SERVER_API + 'rest/rest-izin.php/data?tgl=2020-01-01&tgl_end=2020-08-01');
+    const data = await res.json();
+    console.log("fetchDataHris -> data", data)
+    return data;
+}
+
 async function fetchUserHris(){
-    // const res = await fetch(SERVER_API + 'assets/json/hris_user.json');
-    const res = await fetch(SERVER_API + 'rest/rest-user.php/data');
+    const res = await fetch(SERVER_API + 'assets/json/hris_user.json');
+    // const res = await fetch(SERVER_API + 'rest/rest-user.php/data');
     const data = await res.json();
     return data;
 }
