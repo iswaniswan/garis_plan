@@ -6,13 +6,13 @@ require_once (APPPATH."libraries/Facility.php");
 require_once (APPPATH."libraries/Calendar.php");
 require_once (APPPATH.'libraries/Utils.php');
 require_once (APPPATH.'libraries/interface/User.php');
-require_once (APPPATH.'libraries/interface/Meeting.php');
+require_once (APPPATH.'libraries/interface/Event.php');
 
 class Home extends CI_Controller {
 
 	// just for develeop, static user
-	private $USER;
-	private $MEETING;
+	private $user;
+	private $event;
 
 	private $room;
 	private $facility;
@@ -28,15 +28,15 @@ class Home extends CI_Controller {
 		$this->calendar = new Calendar();
 		$this->utils = new Utils();
 
-		$this->USER = new User();
-		$this->MEETING = new Meeting();
+		$this->user = new User();
+		$this->event = new Event();
 	}
 
 	// dashboard
 
 	public function index(){
 		// rest user
-		$data['user'] = $this->USER;
+		$data['user'] = $this->user;
 		$this->load->view('index', $data);
 	}
 
@@ -84,21 +84,18 @@ class Home extends CI_Controller {
 
 		$valid = true;
 		
-		$meeting['date_start'] = (empty($_POST['start']) || $_POST['start'] == null ? $valid = false : $_POST['start'] );
-		$meeting['date_end'] = (empty($_POST['end']) || $_POST['end'] == null ? $valid = false : $_POST['end'] );
-		$meeting['title'] = (empty($_POST['title']) || $_POST['title'] == null ? $valid = false : $_POST['title'] );
-		$meeting['type'] = (empty($_POST['type']) || $_POST['type'] == null ? $valid = false : $_POST['type'] );
-		$meeting['note'] = (empty($_POST['note']) || $_POST['note'] == null ? $valid = false : $_POST['note'] );
-		$meeting['participant'] = (empty($_POST['participant']) || $_POST['participant'] == null ? '' : $_POST['participant'] );		
-		
+		$event['date_start'] = (empty($_POST['start']) || $_POST['start'] == null ? $valid = false : $_POST['start'] );
+		$event['date_end'] = (empty($_POST['end']) || $_POST['end'] == null ? $valid = false : $_POST['end'] );
+		$event['title'] = (empty($_POST['title']) || $_POST['title'] == null ? $valid = false : $_POST['title'] );
+		$event['type'] = (empty($_POST['type']) || $_POST['type'] == null ? $valid = false : $_POST['type'] );
+		$event['note'] = (empty($_POST['note']) || $_POST['note'] == null ? '' : $_POST['note'] );
+		$event['participant'] = (empty($_POST['participant']) || $_POST['participant'] == null ? '[]' : $_POST['participant'] );		
+		$event['room_id'] = (empty($_POST['room_id']) || $_POST['room_id'] == null ? '' : $_POST['room_id'] );
 
 		if($valid){
-			$meeting['updated_by'] = $this->USER->id;
-			$this->MEETING->setMeeting($meeting);
-			$query = $this->calendar->event_add($this->MEETING->getMeeting());
-			if($query){
-				$response['data'] = $query;
-			}
+			$event['updated_by'] = $this->user->id;
+			$this->event->setEvent($event);
+			$response['data'] = $this->calendar->event_add($this->event->getEvent());
 		}else{
 			$response['error'] = 1;
 		}

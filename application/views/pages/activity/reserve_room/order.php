@@ -23,7 +23,7 @@
                 <h4>New reservation</h4>
             </div>
             <div class="card-body">
-                <form action="Home/reserve_room_submit" methods="POST" class="needs-validation" novalidate="">
+                <form action="Home/reserve_room_submit" methods="POST" class="needs-validation" novalidate="" onsubmit="event.preventDefault();">
                     <div class="section-title mt-0">Room</div>
                     <!-- room select -->
                     <div class="form-group">
@@ -117,7 +117,7 @@
                                 <select class="select2 form-control" name="participant" multiple="" required="" id="user-selection">
                                     <option value="1">user 1</option>
                                 </select>
-                                <div class="invalid-feedback">check capacity</div>
+                                <div class="invalid-feedback">check user</div>
                             </div>
                         </div>
                     </div>
@@ -193,6 +193,20 @@ async function getUser(){
     $('#user-selection').html(cmp_user_list);
 }
 
+async function reserveRoomSubmit(e){
+    let params = {
+        start: $(e).find('input[name="start"]').val(),
+        end: $(e).find('input[name="start"]').val(),
+        title: $(e).find('input[name="title"]').val(),
+        type: 'group',
+        note: $(e).find('input[name="note"]').val() || '',
+        participant: $(e).find('select[name="participant"]').val(),
+        room_id: $(e).find('select[name="name"]').val(),
+    }
+
+    const result = await fetchNewRoomReservation(params);
+}
+
 $(document).ready(function(){
     getUser();
     /**
@@ -265,6 +279,8 @@ $(document).ready(function(){
         if (form[0].checkValidity() === false) {
         event.preventDefault();
         event.stopPropagation();
+        }else{
+            reserveRoomSubmit(form);
         }
         form.addClass('was-validated');
     });

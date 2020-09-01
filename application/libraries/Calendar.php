@@ -1,6 +1,6 @@
 <?php 
 
-// require_once(APPPATH."libraries/interface/Event.php");
+require_once(APPPATH."libraries/interface/Event.php");
 
 class Calendar {
 
@@ -10,15 +10,15 @@ class Calendar {
     public function __construct(){
         $this->CI =& get_instance();
         $this->CI->load->Model('MCalendar');
-        // $this->event = new Event();
+        $this->event = new Event();
     }
 	
 	public function get_all_data(){
 		return $this->CI->MCalendar->get(null, null, null, null);
     }
     
-    public function event_add($meeting){
-        return $this->CI->MCalendar->insert_new_events($meeting);
+    public function event_add($event){
+        return $this->CI->MCalendar->insert_new_events($event);
     }
 
 }

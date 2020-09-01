@@ -160,24 +160,25 @@ async function loadEvents(){
     dt_calendar.forEach(r => {
         let dtStartStr = dateTimeStrToDateStr(r.date_start);
         let dtEndStr = dateTimeStrToDateStr(r.date_end);
-        let description = (r.note !== null ? r.note : r.celebration);
+        let description = (r.note !== null ? r.note : r.title);
         let extendedProps = [];
         extendedProps.push({
             description: description,
-            type: r.type
+            type: r.type,
+            participant: r.participant
         });
         
         if(r.type === 'private'){
-            let eve = new Izin(r.celebration, dtStartStr, dtEndStr, description, extendedProps)
+            let eve = new Izin(r.title, dtStartStr, dtEndStr, description, extendedProps)
             privateEvents.push(eve);
         }else if(r.type === 'nasional'){
-            let eve = new Holiday(r.celebration, dtStartStr, dtEndStr, description, extendedProps);
+            let eve = new Holiday(r.title, dtStartStr, dtEndStr, description, extendedProps);
             holidayEvents.push(eve);
         }else if(r.type === 'group'){
-            let eve = new Meeting(r.celebration, dtStartStr, dtEndStr, description, extendedProps);
+            let eve = new Meeting(r.title, dtStartStr, dtEndStr, description, extendedProps);
             groupEvents.push(eve);
         }else if(r.type === 'company'){
-            let eve = new Cuti(r.celebration, dtStartStr, dtEndStr, description, extendedProps);
+            let eve = new Cuti(r.title, dtStartStr, dtEndStr, description, extendedProps);
             companyEvents.push(eve);
         }
     }); 

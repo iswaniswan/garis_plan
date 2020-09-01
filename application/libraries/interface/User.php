@@ -10,13 +10,7 @@ class User {
     public $head = 'IT Manager';
     public $head_indirect = 'President Director';
 
-    protected $CI;
     public $USER;
-
-    public function __construct(){
-        $this->CI =& get_instance();
-    }
-
 
     public function setUser($user = null){
         $this->name = (!empty($user['name']) ? $this->name = $user['name'] : $this->name);

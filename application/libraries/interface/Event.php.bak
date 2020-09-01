@@ -4,7 +4,7 @@ class Event {
 
     private $date_start;
     private $date_end;
-    private $celebration;
+    private $title;
     private $type;
     private $note;
 

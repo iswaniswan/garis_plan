@@ -1,8 +1,8 @@
 /**
  *  CONSTANT
  */
-// const SERVER_API = 'http://assetsmanagement.lan/';
-const SERVER_API = 'http://localhost:1381/';
+const SERVER_API = 'http://assetsmanagement.lan/';
+// const SERVER_API = 'http://localhost:1381/';
 // const SERVER_API = 'http://172.73.1.94/';
 
 async function fetchUserprofile(){
@@ -131,6 +131,35 @@ async function fetchUpdateRoom(payload){
         .then(result => {return result})
         .catch(error => console.log('error', error));    
     const data = await res.json();
+    
+    return data;
+}
+
+async function fetchNewRoomReservation(payload){
+    let arrUser = [];
+    payload.participant.map(x=>{
+        return arrUser.push(parseInt(x));
+    });
+
+    let form = new FormData();
+    Object.entries(payload).forEach(([key, value]) => {
+        if(key == 'participant' && value != null){
+            form.append(key, JSON.stringify(arrUser));
+        }else{
+            form.append(key, value);
+        }
+    });
+
+    let requestOptions = {
+        method: 'POST',
+        body: form
+    }    
+    
+    const res = await fetch(SERVER_API+"Home/reserve_room_submit", requestOptions)
+        .then(result => {return result})
+        .catch(error => console.log('error', error));    
+    const data = await res.json();
+    console.log("fetchNewRoomReservation -> data", data)
     
     return data;
 }
