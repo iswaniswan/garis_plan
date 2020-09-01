@@ -5,11 +5,14 @@ require_once (APPPATH."libraries/Room.php");
 require_once (APPPATH."libraries/Facility.php");
 require_once (APPPATH."libraries/Calendar.php");
 require_once (APPPATH.'libraries/Utils.php');
+require_once (APPPATH.'libraries/interface/User.php');
+require_once (APPPATH.'libraries/interface/Meeting.php');
 
 class Home extends CI_Controller {
 
-	// just for develeop
+	// just for develeop, static user
 	private $USER;
+	private $MEETING;
 
 	private $room;
 	private $facility;
@@ -24,15 +27,12 @@ class Home extends CI_Controller {
 		$this->facility = new Facility();
 		$this->calendar = new Calendar();
 		$this->utils = new Utils();
-		
-		$user['name'] = 'iswanto';
-		$user['id'] = '201137';
-		$user['department'] = 'IT';
-		$user['position'] = 'IT Staff';
-		$user['head'] = 'IT Manager';
-		$user['head_indirect'] = 'President Director';
-		$this->USER = $user;
+
+		$this->USER = new User();
+		$this->MEETING = new Meeting();
 	}
+
+	// dashboard
 
 	public function index(){
 		// rest user
@@ -57,6 +57,8 @@ class Home extends CI_Controller {
 		echo json_encode($c, true);
 	}
 
+	// reserve room
+
 	public function reserve_room_new(){
 		$q = $this->room->get_room();
 		$i=0;
@@ -75,6 +77,36 @@ class Home extends CI_Controller {
 		$data['t'] = $this->load->view('pages/activity/reserve_room/order', $d);
 		return $data;
 	}
+
+	public function reserve_room_submit(){		
+		$response['data'] = [];
+		$response['error'] = 0;
+
+		$valid = true;
+		
+		$meeting['date_start'] = (empty($_POST['start']) || $_POST['start'] == null ? $valid = false : $_POST['start'] );
+		$meeting['date_end'] = (empty($_POST['end']) || $_POST['end'] == null ? $valid = false : $_POST['end'] );
+		$meeting['title'] = (empty($_POST['title']) || $_POST['title'] == null ? $valid = false : $_POST['title'] );
+		$meeting['type'] = (empty($_POST['type']) || $_POST['type'] == null ? $valid = false : $_POST['type'] );
+		$meeting['note'] = (empty($_POST['note']) || $_POST['note'] == null ? $valid = false : $_POST['note'] );
+		$meeting['participant'] = (empty($_POST['participant']) || $_POST['participant'] == null ? '' : $_POST['participant'] );		
+		
+
+		if($valid){
+			$meeting['updated_by'] = $this->USER->id;
+			$this->MEETING->setMeeting($meeting);
+			$query = $this->calendar->event_add($this->MEETING->getMeeting());
+			if($query){
+				$response['data'] = $query;
+			}
+		}else{
+			$response['error'] = 1;
+		}
+
+		echo json_encode($response, true);
+	}
+
+	// settings->data->room
 
 	public function room(){
 		$d['room'] = $this->room->get_room();
@@ -142,6 +174,8 @@ class Home extends CI_Controller {
 		echo json_encode($result, true);
 	}
 
+	// settings->data->facilities
+
 	public function facilities(){
 		$q = $this->facility->get_facilities();
 		$d['fa'] = $q;
@@ -160,11 +194,6 @@ class Home extends CI_Controller {
 		echo json_encode($data, true);
 	}
 
-	public function test(){
-		
-		echo phpversion();
-	}
-
 	/**
 	 *  request component 
 	 */
@@ -173,4 +202,5 @@ class Home extends CI_Controller {
 		$data['c'] = $this->load->view('components/table/table_hover');
 		return $data;
 	}
+
 }
