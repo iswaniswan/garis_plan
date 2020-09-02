@@ -3163,6 +3163,11 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
   margin-top: 6px;
   margin-right: 15px;
 }
+
+.list-schedule.group:before{
+  background-color: #47c363 !important;
+}
+
 .list-schedule { 
   margin-top:15px; 
   font-size: 16px !important;

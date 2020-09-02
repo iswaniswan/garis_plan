@@ -130,6 +130,7 @@ class Components {
     }
 
     scheduleBoardNext = function(data){
+        console.log("Components -> scheduleBoardNext -> data", data)
         const board = `
             ${data.map(item => {
                 let mStart = moment(item.start, 'YYYY-MM-DD');
@@ -137,7 +138,10 @@ class Components {
                 let dtStr = (item.start === item.end ? 
                     mStart.format('D MMM YY') : mStart.format('D MMM YY') + ' - ' + mEnd.format('D MMM YY')
                     );
-                return `<div><h5 class="list-schedule">${dtStr}</h5><p class="section-lead">
+
+                const isGroup = (item.extendedProps[0].type === 'group' ? 'group' : '');
+
+                return `<div><h5 class="list-schedule ${isGroup}">${dtStr}</h5><p class="section-lead">
                     <strong>${item.title}</strong><br/>${item.description}</p></div>`;
             }).join('')}
         `;

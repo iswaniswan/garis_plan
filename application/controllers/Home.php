@@ -92,6 +92,7 @@ class Home extends CI_Controller {
 		$event['note'] = (empty($_POST['note']) || $_POST['note'] == null ? '' : $_POST['note'] );
 		$event['participant'] = (empty($_POST['participant']) || $_POST['participant'] == null ? '[]' : $_POST['participant'] );		
 		$event['room_id'] = (empty($_POST['room_id']) || $_POST['room_id'] == null ? '' : $_POST['room_id'] );
+		$event['branch'] = (empty($_POST['branch']) || $_POST['branch'] == null ? '' : $_POST['branch'] );
 
 		if($valid){
 			$event['updated_by'] = $this->user->id;

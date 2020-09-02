@@ -231,7 +231,6 @@ $(document).ready(function(){
         timePicker24Hour: false,
         minDate: dateStart.format('YYYY-MM-DD'),
     }, function(start, end){
-        console.log("start : " + start.format('MMMM D, YYYY') + ", end : " + end.format('MMMM D, YYYY') );
     });
 
     $('input[name="time_start"]').timepicker({

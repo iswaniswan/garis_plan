@@ -13,7 +13,7 @@ class Event {
     };
 }
 
-// event yang berlaku nasional
+// event yang berlaku nasional, type global
 class Holiday extends Event {
 
     primaryColor = '#fc544b';
@@ -30,7 +30,7 @@ class Holiday extends Event {
     
 }
 
-// event yang berlaku untuk seluruh karyawan 
+// event yang berlaku untuk seluruh karyawan, type branch
 class Cuti extends Event {
 
     primaryColor = '#e83e8c';
@@ -47,7 +47,7 @@ class Cuti extends Event {
     
 }
 
-// event yang berlaku untuk group
+// event yang berlaku untuk group, type group
 class Meeting extends Event {
 
     primaryColor = '#47c363';
@@ -64,7 +64,7 @@ class Meeting extends Event {
     
 }
 
-// event yang berlaku untuk pribadi
+// event yang berlaku untuk pribadi, type private
 class Izin extends Event {
 
     primaryColor = '#3abaf4';

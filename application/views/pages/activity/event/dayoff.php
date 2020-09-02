@@ -29,12 +29,12 @@
                             <div class="col-6">
                                 <label>Date start</label>
                                 <input type="text" class="form-control datetimepicker" name="start">
-                                <div class="invalid-feedback">title cannot be empty</div>
+                                <div class="invalid-feedback">check date</div>
                             </div>
                             <div class="col-6">
                                 <label>Date end</label>
                                 <input type="text" class="form-control datetimepicker" name="end">
-                                <div class="invalid-feedback">title cannot be empty</div>
+                                <div class="invalid-feedback">check date</div>
                             </div>
                         </div>
                     </div>
@@ -122,6 +122,36 @@
 
 <script type="text/javascript">
 
+function totalDateLength(){
+    let startDate = moment($('input[name="start"]').val(), "YYYY-MM-DD HH:mm:ss");
+    let endDate = moment($('input[name="end"]').val(), "YYYY-MM-DD HH:mm:ss");
+    let duration = moment.duration(endDate.diff(startDate));  
+    console.log("totalDateLength -> duration", duration)
+    
+    return duration;
+}
+
+function isDateValid( element, duration){
+    let changed = $('input[name="end"]').hasClass('changed');
+    if(!changed) return false;
+
+    let errElement = element.siblings('.invalid-feedback');
+    let btnSubmit = $('button[name="submit"]');
+    if(duration < 0){
+        element.addClass('invalid');
+        errElement.show('fast');
+        btnSubmit.prop('disabled', true);
+    }else{
+        $('.datetimepicker').each(function(){
+            $(this).removeClass('invalid');
+        })
+        $('.datetimepicker').siblings('.invalid-feedback').each(function(){
+            $(this).hide('fast');
+        })
+        btnSubmit.prop('disabled', false);
+    }
+}
+
 async function getUser(){
     const dt_json = await fetchUserHris();
     const users = dt_json.data;
@@ -152,15 +182,24 @@ $(document).ready(function(){
     let dateStart = moment();
     let date_start, date_end;
 
-    $('.datetimepicker').daterangepicker({
-        locale: {format: 'YYYY-MM-DD'},
-        singleDatePicker: true,
-        timePicker: false,
-        timePicker24Hour: false,
-        minDate: dateStart.format('YYYY-MM-DD'),
-    }, function(start, end){
-        console.log("start : " + start.format('MMMM D, YYYY') + ", end : " + end.format('MMMM D, YYYY') );
-    });
+    $('.datetimepicker').each(function(){
+        $(this).daterangepicker({
+            locale: {format: 'YYYY-MM-DD'},
+            singleDatePicker: true,
+            timePicker: false,
+            timePicker24Hour: false,
+            minDate: dateStart.format('YYYY-MM-DD'),
+        }).on('change', function(){
+            let duration = totalDateLength();
+            isDateValid($(this), duration);
+        });
+    })
+
+    $('input[name="end"]').on('change', function(){
+        $(this).addClass('changed');
+        let duration = totalDateLength();
+        isDateValid($(this), duration);
+    })
 
     $('select[name="branch"]').select2();
 

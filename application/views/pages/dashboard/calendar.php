@@ -141,8 +141,7 @@ function loadComponentScheduleBoard(data){
         return ( moment(d.end, 'YYYY-MM-DD') < moment.now() ? eventPrev.push(d) : eventNext.push(d) )
     });
     eventNext.sort((a, b) => (moment(a.start, 'YYYY-MM-DD') - moment(b.start, 'YYYY-MM-DD')) );
-    
-    console.log("loadComponentScheduleBoard -> eventNext", eventNext)
+
     const elPrev = new Components().scheduleBoardPrev(eventPrev.slice(0, 2));
     $('#schedule-prev').html(elPrev);
 
@@ -171,13 +170,13 @@ async function loadEvents(){
         if(r.type === 'private'){
             let eve = new Izin(r.title, dtStartStr, dtEndStr, description, extendedProps)
             privateEvents.push(eve);
-        }else if(r.type === 'nasional'){
+        }else if(r.type === 'global'){
             let eve = new Holiday(r.title, dtStartStr, dtEndStr, description, extendedProps);
             holidayEvents.push(eve);
         }else if(r.type === 'group'){
             let eve = new Meeting(r.title, dtStartStr, dtEndStr, description, extendedProps);
             groupEvents.push(eve);
-        }else if(r.type === 'company'){
+        }else if(r.type === 'branch'){
             let eve = new Cuti(r.title, dtStartStr, dtEndStr, description, extendedProps);
             companyEvents.push(eve);
         }

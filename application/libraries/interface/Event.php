@@ -11,6 +11,7 @@ class Event {
     public $note;
     public $participant;
     public $room_id;
+    public $branch;
     public $updated_date;
     public $updated_by;
     public $is_deleted;
@@ -24,6 +25,7 @@ class Event {
         $this->note = $event['note'];
         $this->participant = $event['participant'];
         $this->room_id = (empty($event['room_id']) || $event['room_id'] == null ? '' : $event['room_id']);
+        $this->branch = (empty($event['branch']) || $event['branch'] == null ? '' : $event['branch']);
         $this->updated_date = (empty($event['updated_date']) || $event['updated_date'] == null ? '' : $event['updated_date'] ) ;
         $this->updated_by = $event['updated_by'];
         $this->is_deleted = (empty($event['is_deleted']) || $event['is_deleted'] == null ? 0 : $event['is_deleted'] ) ;
@@ -38,6 +40,7 @@ class Event {
         $event['note'] = $this->note;
         $event['participant'] = $this->participant;
         $event['room_id'] = $this->room_id;
+        $event['branch'] = $this->branch;
         $event['updated_date'] = $this->updated_date;
         $event['updated_by'] = $this->updated_by;
         $event['is_deleted'] = $this->is_deleted;

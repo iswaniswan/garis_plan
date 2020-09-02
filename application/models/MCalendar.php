@@ -18,6 +18,7 @@ Class MCalendar extends MSql {
   private $note = 'note';
   private $participant = 'participant';
   private $room_id = 'room_id';
+  private $branch = 'branch';
   private $updated_date = 'updated_date';
   private $updated_by = 'updated_by';
   private $is_deleted = 'is_deleted';
@@ -26,11 +27,11 @@ Class MCalendar extends MSql {
 
     $insert = "INSERT INTO " . $this->table . " (" . $this->date_start . ", " . $this->date_end . 
       ", " . $this->title . ", " . $this->type . ", " . $this->note . 
-      ", " . $this->participant . ", " . $this->room_id . ", " . $this->updated_by . ", " . $this->is_deleted . ") ";
+      ", " . $this->participant . ", " . $this->room_id . ", " . $this->branch . ", " . $this->updated_by . ", " . $this->is_deleted . ") ";
 
     $insert .= "VALUES ('" . $event['date_start'] . "', '" . $event['date_end'] . "', '" . 
       $event['title'] . "', '" . $event['type'] . "', '" . $event['note'] . "', '" . 
-      $event['participant'] . "', '" . $event['room_id'] . "', '" . $event['updated_by'] . "', " . $event['is_deleted'] . ") ";
+      $event['participant'] . "', '" . $event['room_id'] . "', '" . $event['branch'] . "', '" . $event['updated_by'] . "', " . $event['is_deleted'] . ") ";
 
     $query = $this->db->query($insert);
     // var_dump($query);
