@@ -17,11 +17,12 @@
             <li class="menu-header">Activity</li>
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
-                    <i class="fas fa-columns"></i><span>Reserve room</span>
+                    <i class="fas fa-columns"></i><span>Event</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="<?= base_url('activity/reserve_room/order'); ?>">Order</a></li>
-                    <li><a class="nav-link" href="layout-default.html">Check</a></li>
+                    <li><a class="nav-link" name="activity-event-room" href="layout-default.html">Room</a></li>
+                    <li><a class="nav-link" name="activity-event-reservation" href="<?= base_url('activity/event/reservation'); ?>">Reservation</a></li>
+                    <li><a class="nav-link" name="activity-event-dayoff" href="<?= base_url('activity/event/dayoff'); ?>">Day off</a></li>
                 </ul>
             </li>
             

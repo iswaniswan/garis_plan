@@ -1,8 +1,8 @@
 /**
  *  CONSTANT
  */
-const SERVER_API = 'http://assetsmanagement.lan/';
-// const SERVER_API = 'http://localhost:1381/';
+// const SERVER_API = 'http://assetsmanagement.lan/';
+const SERVER_API = 'http://localhost:1381/';
 // const SERVER_API = 'http://172.73.1.94/';
 
 async function fetchUserprofile(){
@@ -159,7 +159,6 @@ async function fetchNewRoomReservation(payload){
         .then(result => {return result})
         .catch(error => console.log('error', error));    
     const data = await res.json();
-    console.log("fetchNewRoomReservation -> data", data)
-    
+        
     return data;
 }

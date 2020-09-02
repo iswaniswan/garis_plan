@@ -19,12 +19,12 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-none">
                 <h4>New reservation</h4>
             </div>
             <div class="card-body">
                 <form action="Home/reserve_room_submit" methods="POST" class="needs-validation" novalidate="" onsubmit="event.preventDefault();">
-                    <div class="section-title mt-0">Room</div>
+                    <div class="section-title mt-0 text-primary mb-5">Room</div>
                     <!-- room select -->
                     <div class="form-group">
                         <div class="row">
@@ -75,7 +75,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <label>Date</label>
-                                <input type="text" class="form-control datetimepicker">
+                                <input type="text" class="form-control datetimepicker" name="start">
                                 <div class="invalid-feedback">title cannot be empty</div>
                             </div>
                             <div class="col-3">
@@ -195,16 +195,23 @@ async function getUser(){
 
 async function reserveRoomSubmit(e){
     let params = {
-        start: $(e).find('input[name="start"]').val(),
-        end: $(e).find('input[name="start"]').val(),
+        start: $(e).find('input[name="start"]').val() + ' 00:00:00',
+        end: $(e).find('input[name="start"]').val() + ' 00:00:00',
         title: $(e).find('input[name="title"]').val(),
         type: 'group',
         note: $(e).find('input[name="note"]').val() || '',
         participant: $(e).find('select[name="participant"]').val(),
         room_id: $(e).find('select[name="name"]').val(),
     }
+    console.log("reserveRoomSubmit -> params", params);
 
     const result = await fetchNewRoomReservation(params);
+    console.log("reserveRoomSubmit -> result", result)
+    if(result.data == true){
+        let modal = await new Components().simpleModalSuccess();
+        $('form').empty().append(modal);
+        $('a[name="activity-event-reservation"]').trigger('click');
+    }
 }
 
 $(document).ready(function(){

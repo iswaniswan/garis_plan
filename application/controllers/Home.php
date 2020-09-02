@@ -57,7 +57,7 @@ class Home extends CI_Controller {
 		echo json_encode($c, true);
 	}
 
-	// reserve room
+	// activity event
 
 	public function reserve_room_new(){
 		$q = $this->room->get_room();
@@ -74,13 +74,14 @@ class Home extends CI_Controller {
 			$i++;
 		}
 		$d['room'] = $room;
-		$data['t'] = $this->load->view('pages/activity/reserve_room/order', $d);
+		$data['t'] = $this->load->view('pages/activity/event/reservation', $d);
 		return $data;
 	}
 
 	public function reserve_room_submit(){		
 		$response['data'] = [];
 		$response['error'] = 0;
+		$response['message'] = '';
 
 		$valid = true;
 		
@@ -94,13 +95,20 @@ class Home extends CI_Controller {
 
 		if($valid){
 			$event['updated_by'] = $this->user->id;
+
 			$this->event->setEvent($event);
 			$response['data'] = $this->calendar->event_add($this->event->getEvent());
+			$response['message'] = 'success';
 		}else{
 			$response['error'] = 1;
 		}
 
 		echo json_encode($response, true);
+	}
+
+	public function set_day_off(){
+		$data['t'] = $this->load->view('pages/activity/event/dayoff');
+		return $data;
 	}
 
 	// settings->data->room
