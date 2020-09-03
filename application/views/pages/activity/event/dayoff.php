@@ -11,13 +11,13 @@
 </style>
 
 <div class="section-header">
-    <h1 class="">Set Day Off</h1>
+    <h1 class="">Set Day Mark</h1>
 </div>
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header d-none">
-                <h4>Set new day off</h4>
+                <h4></h4>
             </div>
             <div class="card-body">
                 <form action="" methods="POST" class="needs-validation" novalidate="" onsubmit="event.preventDefault();">

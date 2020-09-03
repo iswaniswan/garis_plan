@@ -48,11 +48,7 @@ Class MSql extends CI_Model {
   }
 
   public function success_query(){
-    if ($this->db->affected_rows() >= 1) {
-      return true;
-    }else {
-      return false;
-    }
+    return ($this->db->affected_rows() >= 1 ? true : false);
   }
 
 }

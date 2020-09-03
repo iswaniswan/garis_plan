@@ -2,7 +2,7 @@
 
 require_once(APPPATH."models/MSql.php");
 
-Class MCalendar extends MSql {
+Class MEvents extends MSql {
 
   public function __construct(){
       parent::__construct($this->table);
@@ -35,7 +35,9 @@ Class MCalendar extends MSql {
 
     $query = $this->db->query($insert);
     // var_dump($query);
-    return parent::success_query();
+    // return parent::success_query();
+    return (parent::success_query() ? $this->db->insert_id() : false);
+    
   }
 
 }

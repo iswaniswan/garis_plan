@@ -20,9 +20,10 @@
                     <i class="fas fa-columns"></i><span>Event</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" name="activity-event-room" href="layout-default.html">Room</a></li>
-                    <li><a class="nav-link" name="activity-event-reservation" href="<?= base_url('activity/event/reservation'); ?>">Reservation</a></li>
-                    <li><a class="nav-link" name="activity-event-dayoff" href="<?= base_url('activity/event/dayoff'); ?>">Day off</a></li>
+                    <!-- <li><a class="nav-link" name="activity-event-room" href="layout-default.html">Dashboard</a></li> -->
+                    <li><a class="nav-link" name="activity-event-reservation" href="<?= base_url('activity/event/reservation'); ?>">Room reservation</a></li>
+                    <li><a class="nav-link" name="activity-event-dayoff" href="<?= base_url('activity/event/dayoff'); ?>">Day mark</a></li>
+                    <li><a class="nav-link" name="activity-event-dayoff" href="<?= base_url('activity/event/notification'); ?>">Notification</a></li>
                 </ul>
             </li>
             

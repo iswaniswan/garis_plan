@@ -5,6 +5,7 @@ require_once (APPPATH."libraries/Room.php");
 require_once (APPPATH."libraries/Facility.php");
 require_once (APPPATH."libraries/Calendar.php");
 require_once (APPPATH.'libraries/Utils.php');
+require_once (APPPATH.'libraries/Notification.php');
 require_once (APPPATH.'libraries/interface/User.php');
 require_once (APPPATH.'libraries/interface/Event.php');
 
@@ -17,6 +18,7 @@ class Home extends CI_Controller {
 	private $room;
 	private $facility;
 	private $calendar;
+	private $notification;
 
 	public function __construct(){
 		parent::__construct();
@@ -30,13 +32,14 @@ class Home extends CI_Controller {
 
 		$this->user = new User();
 		$this->event = new Event();
+		$this->notification = new Notification();
 	}
 
 	// dashboard
 
 	public function index(){
 		// rest user
-		$data['user'] = $this->user;
+		$data['user'] = $this->user;		
 		$this->load->view('index', $data);
 	}
 
@@ -46,7 +49,8 @@ class Home extends CI_Controller {
 	}
 
 	public function calendar_events(){
-		$q = $this->calendar->get_all_data();
+		// $q = $this->calendar->get_all_data();
+		$q = $this->calendar->get_user_event();
 		$i=0;
 		foreach($q as $r){
 			foreach($r as $key=>$val){
@@ -56,6 +60,18 @@ class Home extends CI_Controller {
 		}
 		echo json_encode($c, true);
 	}
+
+	// notification
+	public function notification(){		
+		$data['notification'] = $this->notification->get_all_notification_by_user();
+		$this->load->view('pages/activity/event/notification', $data);
+	}
+
+	public function get_user_notification(){
+		$notification = $this->notification->get_simple_notification_by_user();
+		echo json_encode($notification, true);
+	}
+
 
 	// activity event
 

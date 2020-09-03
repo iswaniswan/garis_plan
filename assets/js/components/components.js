@@ -477,4 +477,41 @@ class Components {
         $(modal).modal('show');
     }
 
+    notification = function(data){
+        const template = `
+            <a href="#" data-toggle="dropdown" id="" class="nav-link notification-toggle nav-link-lg beep">
+                <i class="far fa-bell"></i>
+            </a>
+            <div class="dropdown-menu dropdown-list dropdown-menu-right">
+                <div class="dropdown-header">Notifications
+                    <div class="float-right d-none">
+                        <a href="#">Mark All As Read</a>
+                    </div>
+                </div>
+                ${data.map(x=>{
+                    return `
+                        <div class="dropdown-list-content dropdown-list-icons" style="height:auto";>
+                            <a href="#" class="dropdown-item dropdown-item-unread" id=${x.id} onclick="viewNotification(this)">
+                                <div class="dropdown-item-icon bg-info text-white">
+                                    <i class="far fa-envelope"></i>
+                                </div>
+                                <div class="dropdown-item-desc">
+                                    <span class="lead">${x.title}</span>
+                                </div>
+                            </a>
+                        </div>
+                    `;
+                }).join('')}
+                <div class="dropdown-footer text-center">
+                    <a href="#">View All <i class="fas fa-chevron-right"></i></a>
+                </div>
+            </div>
+        `;
+        return template;
+    }
+
+    notification_form = function(){
+
+    }
+
 }

@@ -3179,3 +3179,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
 .fc-event{
     cursor: pointer;
 }
+
+.dropdown-list .dropdown-list-content:not(.is-end):after {
+  z-index: -1;
+}

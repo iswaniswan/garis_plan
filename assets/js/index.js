@@ -25,6 +25,8 @@ $(document).ready(function(){
         content_page.append(response);
     })
 
+    $('#notification-list').get_user_notification();
+
 });
 
 (function($){
@@ -41,5 +43,21 @@ $(document).ready(function(){
             element.append(response);
         });
     };
+
+    $.fn.get_user_notification = async function(){
+        const data = await fetchUserNotification();
+        console.log("data", data);
+        let notif = [];
+        data.map((value, index, arr)=>{
+            if(value.is_read == 0){
+                notif.push(arr[index]);
+            }
+        });
+        if(notif.length >= 1){
+            console.log("alert new notification")
+            const html = new Components().notification(notif.slice(0, 5));
+            $(this).html(html);
+        }
+    }
 
 }(jQuery));
