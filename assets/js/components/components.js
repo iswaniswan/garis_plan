@@ -477,26 +477,31 @@ class Components {
         $(modal).modal('show');
     }
 
-    notification = function(data){
+    notification = function(data, show){
+        console.log("Components -> notification -> data", data)
+        const showed = show ? 'show' : '';
         const template = `
             <a href="#" data-toggle="dropdown" id="" class="nav-link notification-toggle nav-link-lg beep">
                 <i class="far fa-bell"></i>
             </a>
-            <div class="dropdown-menu dropdown-list dropdown-menu-right">
+            <div class="dropdown-menu dropdown-list dropdown-menu-right ${showed}">
                 <div class="dropdown-header">Notifications
                     <div class="float-right d-none">
                         <a href="#">Mark All As Read</a>
                     </div>
                 </div>
                 ${data.map(x=>{
+                    let ntime = moment(x.updated_date, 'YYYY-MM-DD HH:mm:ss').toNow(true);
+                    let ntimeStr = 'About ' + ntime + ' ago';
                     return `
                         <div class="dropdown-list-content dropdown-list-icons" style="height:auto";>
-                            <a href="#" class="dropdown-item dropdown-item-unread" id=${x.id} onclick="viewNotification(this)">
-                                <div class="dropdown-item-icon bg-info text-white">
+                            <a href="#" class="dropdown-item dropdown-item-unread" id=${x.id} onclick="actionNotificationNavbar(this)">
+                                <div class="dropdown-item-icon bg-success text-white">
                                     <i class="far fa-envelope"></i>
                                 </div>
                                 <div class="dropdown-item-desc">
-                                    <span class="lead">${x.title}</span>
+                                    <span class="">${x.title}</span>
+                                    <div class="time text-dark" time="" style="text-transform:unset !important">${ntimeStr}</div>
                                 </div>
                             </a>
                         </div>
@@ -510,8 +515,110 @@ class Components {
         return template;
     }
 
-    notification_form = function(){
+    notification_empty = function(show){
+        const showed = show ? 'show' : '';
+        return `
+        <a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg"><i class="far fa-bell"></i></a>
+        <div class="dropdown-menu dropdown-list dropdown-menu-right ${showed}">
+            <div class="dropdown-list-content dropdown-list-icons" style="height:85px">
+                <a href="#" class="dropdown-item dropdown-item-unread">
+                    <div class="dropdown-item-desc"><h5><small>No new notification</small></h5></div>
+                </a>
+            </div>
+            <div class="dropdown-footer text-center">
+                <a href="#" onclick="removeForm();">View All <i class="fas fa-chevron-right"></i></a>
+            </div>
+        </div>
+        `;
+    }
 
+    notification_form = async function(id){
+        const data = await fetchDetailNotification(id)
+        const date_start = moment(data.date_start, 'YYYY-MM-DD HH:mm:ss').format('DD MMM YY');
+        const date_end = moment(data.date_end, 'YYYY-MM-DD HH:mm:ss').format('DD MMM YY');
+        const dateString = (date_start === date_end ? date_start : date_start + ' - ' + date_end);
+        const form_join = `
+            <form action="" methods="POST" class="needs-validation" novalidate="" onsubmit="event.preventDefault(); " id="${data.event_id}">
+                <div class="custom-control custom-checkbox mb-3">
+                    <input type="checkbox" name="customCheck" class="custom-control-input" id="customCheck1">
+                    <label class="custom-control-label" for="customCheck1">I Agree and add mark this event to my calendar.</label>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary mb-2" name="submit" id="btn_notif_submit" disabled>Submit</button>
+                </div>
+            </form>
+        `;
+        const form_cancel = `
+            <form action="" methods="POST" class="needs-validation" novalidate="" onsubmit="event.preventDefault(); " id="${data.event_id}">
+                <div class="custom-control custom-checkbox mb-3">
+                    <input type="checkbox" name="customCheck" class="custom-control-input" id="customCheck1">
+                    <label class="custom-control-label" for="customCheck1">I decide to cancel and remove this event from my calendar.</label>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-warning mb-2" name="submit" id="btn_notif_submit" disabled>Cancel</button>
+                </div>
+            </form>
+        `;
+
+        const form = `
+        <div class="container">
+            <div class="row justify-content-center" style="">
+                <div class="col-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Notification</h4>
+                            <div class="card-header-action">
+                                <a class="btn btn-icon btn-info" href="#" onclick="removeForm()"><i class="fas fa-times"></i> Close </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="section-title mt-0 mb-5 strong">Received at ${moment(data.updated_date, 'YYYY-MM-DD HH:mm:ss').format('DD MMM YY HH:mm')}</div>
+                            
+                            <div class="container-fluid">
+                                <div class="row mb-3">
+                                    <div class="col-4 font-weight-bold">Title</div>
+                                    <div class="col-8">${(data.title)}</div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-4 font-weight-bold">Event description</div>
+                                    <div class="col-8">${(data.note !== undefined ? data.note : '')}</div>
+                                </div>
+                                <div class="row justify-content-start mb-3">
+                                    <div class="col-4 font-weight-bold">Date</div>
+                                    <div class="col-8">
+                                        ${dateString}
+                                    </div>
+                                </div>
+                                <div class="row justify-content-start mb-3">
+                                    <div class="col-4 font-weight-bold">Time</div>
+                                    <div class="col-8"></div>
+                                </div>
+                                <div class="row justify-content-start mb-3">
+                                    <div class="col-4 font-weight-bold">Room</div>
+                                    <div class="col-8">${(data.room !== undefined ? data.room : '')}</div>
+                                </div>
+                                <div class="row justify-content-start mb-3">
+                                    <div class="col-4 font-weight-bold">Other participant</div>
+                                    <div class="col-8">${data.participant.map(x=>{ return x }).join('')}</div>
+                                </div>
+                                <div class="row justify-content-start mb-3">
+                                    <div class="col-4 font-weight-bold">Invited by</div>
+                                    <div class="col-8">${data.updated_by}</div>
+                                </div>
+                                <div class="row justify-content-start mt-5 mb-3">
+                                    <div class="col-12">
+                                        ${data.is_join == 1 ? form_cancel : form_join}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+        return form;
     }
 
 }

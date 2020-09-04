@@ -91,7 +91,7 @@ async function actionFacility(e){
 }
 
 function removeForm(){
-    $('#form_facility').remove();
+    // $('#form_facility').remove();
     $('a[name="settings-data-facilities"]').trigger('click');
 }
 

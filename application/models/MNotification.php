@@ -41,5 +41,22 @@ Class MNotification extends MSql {
     return parent::success_query();
   }
 
+  public function get_detail_notification_by_id($id){
+    $get = "SELECT n.id, n.event_id, n.is_read, n.updated_date, n.user_id, n.title, n.message, 
+      e.date_start, e.date_end, e.type, e.note, e.participant, e.room_id, e.branch, e.updated_by
+      FROM " . $this->table . " as n inner join events as e on n.event_id = e.id WHERE n.id=" . $id ;
+    
+    $query = $this->db->query($get)->result_array();    
+    return $query;
+  }
+
+  public function update_notification_has_read($id){
+    $update = "UPDATE " . $this->table . " SET " . 
+      $this->is_read . "=1 WHERE id='" . $id . "'";
+
+    $query = $this->db->query($update);
+    return parent::success_query();
+  }
+
 }
 ?>

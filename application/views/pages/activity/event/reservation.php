@@ -17,7 +17,7 @@
     <h1 class="">Reserve room</h1>
 </div>
 <div class="row">
-    <div class="col-12">
+    <div class="col-8 mx-auto">
         <div class="card">
             <div class="card-header d-none">
                 <h4>New reservation</h4>

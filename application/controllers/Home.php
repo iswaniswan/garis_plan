@@ -67,9 +67,26 @@ class Home extends CI_Controller {
 		$this->load->view('pages/activity/event/notification', $data);
 	}
 
-	public function get_user_notification(){
-		$notification = $this->notification->get_simple_notification_by_user();
+	public function get_user_notification_alert(){
+		$notification = $this->notification->get_user_notification_alert();
 		echo json_encode($notification, true);
+	}
+
+	public function get_notification_by_id(){
+		if(isset($_POST['id'])){
+			$notification = $this->notification->get_detail_notification($_POST['id']);
+			echo json_encode($notification, true);
+		}
+	}
+
+	public function set_notification_has_read(){
+		if(isset($_POST['id'])){
+			$notification = $this->notification->update_notification_by_id($_POST['id']);
+		}
+	}
+
+	public function add_event_passive(){
+		
 	}
 
 

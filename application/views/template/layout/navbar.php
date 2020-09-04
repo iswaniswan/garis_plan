@@ -33,24 +33,10 @@
             </div> -->
         </div>
     </form>
+
     <ul class="navbar-nav navbar-right">
-        <li class="dropdown dropdown-list-toggle" id="notification-list">
-            <a href="#" data-toggle="dropdown" id="" class="nav-link notification-toggle nav-link-lg ">
-                <i class="far fa-bell"></i>
-            </a>
-            <div class="dropdown-menu dropdown-list dropdown-menu-right">
-                <div class="dropdown-list-content dropdown-list-icons" style="height:85px">
-                    <a href="#" class="dropdown-item dropdown-item-unread">
-                        <div class="dropdown-item-desc">
-                            <h5><small>No new notification</small></h5>
-                        </div>
-                    </a>
-                </div>
-                <div class="dropdown-footer text-center">
-                    <a href="#">View All <i class="fas fa-chevron-right"></i></a>
-                </div>
-            </div>
-        </li>
+        <li class="dropdown dropdown-list-toggle" id="notification-list"></li>
+
         <li class="dropdown">
             <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                 <!-- <img alt="image" src="../assets/img/avatar/avatar-1.png" class="rounded-circle mr-1"> -->
