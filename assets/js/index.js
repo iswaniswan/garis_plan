@@ -36,11 +36,12 @@ $(document).ready(function(){
 });
 
 async function actionNotificationNavbar(e){
+    const id = $(e).attr('id');
+    console.log("actionNotificationNavbar -> id", id)
     let header_notif = $('#section-notification');
     let parent = $(e).parent('.dropdown-list-content');
-    const id = $(e).attr('id');
     if(header_notif.length >= 1){
-        actionNotification(id);
+        $('table').find('#'+id).trigger('click');
     }else{
         let header = `<div class="section-header"><h1 class="">Notification</h1></div>`;
         let form = await new Components().notification_form(id);
@@ -59,6 +60,27 @@ async function actionNotificationNavbar(e){
 function removeForm(){
     $('#notification_wrapper').empty();
     $('a[name="activity-event-notification"]').trigger('click');
+}
+
+async function setPassiveEvent(e){
+    let is_join_input = ($(e).find('input[name="is_join"]').length >= 1);
+    if(is_join_input){
+        let params = {
+            event_id: $(e).find('input[name="event_id"]').val(),
+            is_join: $(e).find('input[name="is_join"]').val()
+        };
+        console.log("setPassiveEvent -> params", params)
+        const res = await fetchPassiveEventAdd(params);
+        console.log("setPassiveEvent -> res", res)
+    }else{
+        let params = {
+            event_id: $(e).find('input[name="event_id"]').val(),
+            is_cancel: $(e).find('input[name="is_cancel"]').val()
+        };
+        console.log("setPassiveEvent -> params", params)
+        const res = await fetchPassiveEventUpdate(params);
+        console.log("setPassiveEvent -> res", res)
+    }
 }
 
 (function($){

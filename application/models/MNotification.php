@@ -43,8 +43,10 @@ Class MNotification extends MSql {
 
   public function get_detail_notification_by_id($id){
     $get = "SELECT n.id, n.event_id, n.is_read, n.updated_date, n.user_id, n.title, n.message, 
-      e.date_start, e.date_end, e.type, e.note, e.participant, e.room_id, e.branch, e.updated_by
-      FROM " . $this->table . " as n inner join events as e on n.event_id = e.id WHERE n.id=" . $id ;
+      e.date_start, e.date_end, e.type, e.note, e.participant, e.room_id, e.branch, e.updated_by,
+      ep.is_join, ep.is_cancel
+      FROM " . $this->table . 
+      " as n inner join events as e on n.event_id = e.id left join events_passive as ep on e.id = ep.event_id WHERE n.id=" . $id ;
     
     $query = $this->db->query($get)->result_array();    
     return $query;

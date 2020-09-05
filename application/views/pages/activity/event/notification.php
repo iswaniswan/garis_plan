@@ -52,7 +52,7 @@
                                     <?php 
                                         $is_read_icon = ($n['is_read'] == 0 ? 'far fa-envelope' : 'far fa-envelope-open');
                                     ?>
-                                    <a href="#" class="<?= $n['is_read'] == 0 ? 'btn btn-success' : 'btn btn-light'; ?>" name="view" id="<?= $n['id']; ?>" onclick="actionNotification(this);">
+                                    <a href="#" class="<?= $n['is_read'] == 0 ? 'btn btn-success' : 'btn btn-light'; ?>" is_read="<?= $n['is_read']; ?>" name="view" id="<?= $n['id']; ?>" onclick="actionNotification(this);">
                                         <i class="<?= $is_read_icon; ?>"></i>
                                     </a>
                                 </td>
@@ -70,10 +70,14 @@
 
 <script type="text/javascript">
 async function actionNotification(e){
-    let id = $(e).attr('id');
+    const id = $(e).attr('id');
+    let is_read = $(e).attr('is_read');
     let form = await new Components().notification_form(id);
-    // set notif has read
-    fetchNotificationHasRead(id);
+
+    if(is_read == 0){
+        // set notif has read
+        fetchNotificationHasRead(id);
+    }
 
     $('#notification_wrapper')
         .empty()

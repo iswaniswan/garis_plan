@@ -195,3 +195,33 @@ async function fetchNotificationHasRead(params){
         .then(result => {return result})
         .catch(error => console.log('error', error));   ;
 }
+
+async function fetchPassiveEventAdd(params){
+    let form = new FormData();
+    form.append("event_id", params.event_id);
+    form.append("is_join", params.is_join);
+
+    let requestOptions = {
+        method: 'POST',
+        body: form
+    }  
+    const res = await fetch('Home/add_event_passive', requestOptions)
+        .then(result => {return result})
+        .catch(error => console.log('error', error)); 
+    return res;
+}
+
+async function fetchPassiveEventUpdate(params){
+    let form = new FormData();
+    form.append("event_id", params.event_id);
+    form.append("is_cancel", params.is_cancel);
+
+    let requestOptions = {
+        method: 'POST',
+        body: form
+    }  
+    const res = await fetch('Home/update_event_passive', requestOptions)
+        .then(result => {return result})
+        .catch(error => console.log('error', error)); 
+    return res;
+}

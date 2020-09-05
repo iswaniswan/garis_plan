@@ -16,21 +16,21 @@ Class MEventsPassive extends MSql {
   private $is_cancel = 'is_cancel';
   private $updated_date = 'updated_date';
 
-  public function insert_events_passive($user_id, $event_id, $is_join=0, $is_cancel=0){
+  public function insert_event_passive($event){
     $insert = "INSERT INTO " . $this->table . " (" . $this->user_id . ", " . $this->event_id . 
-        ", " . $this->is_join . ", " . $this->is_cancel . ") ";
+        ", " . $this->is_join . ") ";
 
-      $insert .= "VALUES ('" . $user_id . "', " . $event_id . ", " . $is_join . ", " . $is_cancel . ") ";
+      $insert .= "VALUES ('" . $event['user_id'] . "', " . $event['event_id'] . ", " . $event['is_join'] . ") ";
 
       $query = $this->db->query($insert);
       return parent::success_query();
   }
 
-  public function update_events_passive($id, $user_id, $event_id, $is_join){
+  public function update_events_passive($event){
     $update = "UPDATE " . $this->table . " SET " . 
-      $this->user_id . "='" . $user_id . "', " .
-      $this->event_id . "=" . $event_id . ", " .
-      $this->is_join . "=" . $is_join . ", " .
+      $this->user_id . "='" . $event['user_id'] . "', " .
+      $this->event_id . "=" . $event['event_id'] . ", " .
+      $this->is_cancel . "=" . $event['is_cancel'] . ", " .
       " WHERE id='" . $id . "'";
 
     $query = $this->db->query($update);

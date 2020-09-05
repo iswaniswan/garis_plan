@@ -537,29 +537,8 @@ class Components {
         const date_start = moment(data.date_start, 'YYYY-MM-DD HH:mm:ss').format('DD MMM YY');
         const date_end = moment(data.date_end, 'YYYY-MM-DD HH:mm:ss').format('DD MMM YY');
         const dateString = (date_start === date_end ? date_start : date_start + ' - ' + date_end);
-        const form_join = `
-            <form action="" methods="POST" class="needs-validation" novalidate="" onsubmit="event.preventDefault(); " id="${data.event_id}">
-                <div class="custom-control custom-checkbox mb-3">
-                    <input type="checkbox" name="customCheck" class="custom-control-input" id="customCheck1">
-                    <label class="custom-control-label" for="customCheck1">I Agree and add mark this event to my calendar.</label>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary mb-2" name="submit" id="btn_notif_submit" disabled>Submit</button>
-                </div>
-            </form>
-        `;
-        const form_cancel = `
-            <form action="" methods="POST" class="needs-validation" novalidate="" onsubmit="event.preventDefault(); " id="${data.event_id}">
-                <div class="custom-control custom-checkbox mb-3">
-                    <input type="checkbox" name="customCheck" class="custom-control-input" id="customCheck1">
-                    <label class="custom-control-label" for="customCheck1">I decide to cancel and remove this event from my calendar.</label>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-warning mb-2" name="submit" id="btn_notif_submit" disabled>Cancel</button>
-                </div>
-            </form>
-        `;
-
+        
+        console.log("Components -> data.is_join", data.is_join)
         const form = `
         <div class="container">
             <div class="row justify-content-center" style="">
@@ -599,7 +578,7 @@ class Components {
                                 </div>
                                 <div class="row justify-content-start mb-3">
                                     <div class="col-4 font-weight-bold">Other participant</div>
-                                    <div class="col-8">${data.participant.map(x=>{ return x }).join('')}</div>
+                                    <div class="col-8">${data.participant.map(x=>{ return x }).join(', ')}</div>
                                 </div>
                                 <div class="row justify-content-start mb-3">
                                     <div class="col-4 font-weight-bold">Invited by</div>
@@ -607,7 +586,19 @@ class Components {
                                 </div>
                                 <div class="row justify-content-start mt-5 mb-3">
                                     <div class="col-12">
-                                        ${data.is_join == 1 ? form_cancel : form_join}
+                                        <form action="" methods="POST" class="needs-validation" novalidate="" onsubmit="event.preventDefault(); setPassiveEvent(this);" id="${data.event_id}">
+                                            <div class="custom-control custom-checkbox mb-3">
+                                                <input type="checkbox" name="customCheck" class="custom-control-input" id="customCheck1">
+                                                <label class="custom-control-label" for="customCheck1">
+                                                    ${data.is_join == 1 ? `I decide to cancel and remove this event from my calendar.` : `I Agree and add mark this event to my calendar.`}
+                                                </label>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" name="event_id" value="${data.event_id}" class="d-none">
+                                                ${data.is_join == 1 ? `<input type="text" name="is_cancel" value="1" class="d-none">` : `<input type="text" name="is_join" value="1" class="d-none">`}                                                
+                                                <button type="submit" class="btn ${data.is_join == 1 ? `btn-warning` : `btn-primary` } mb-2" name="submit" id="btn_notif_submit" disabled>Submit</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

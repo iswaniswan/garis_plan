@@ -14,6 +14,7 @@ class Home extends CI_Controller {
 	// just for develeop, static user
 	private $user;
 	private $event;
+	private $eventP;
 
 	private $room;
 	private $facility;
@@ -32,6 +33,7 @@ class Home extends CI_Controller {
 
 		$this->user = new User();
 		$this->event = new Event();
+		$this->eventP = new EventPassive();
 		$this->notification = new Notification();
 	}
 
@@ -49,7 +51,6 @@ class Home extends CI_Controller {
 	}
 
 	public function calendar_events(){
-		// $q = $this->calendar->get_all_data();
 		$q = $this->calendar->get_user_event();
 		$i=0;
 		foreach($q as $r){
@@ -74,7 +75,8 @@ class Home extends CI_Controller {
 
 	public function get_notification_by_id(){
 		if(isset($_POST['id'])){
-			$notification = $this->notification->get_detail_notification($_POST['id']);
+			$id = $_POST['id'];
+			$notification = $this->notification->get_detail_notification($id);
 			echo json_encode($notification, true);
 		}
 	}
@@ -85,7 +87,35 @@ class Home extends CI_Controller {
 		}
 	}
 
+	// public function get_event_passive(){
+	// 	if(isset($_POST['id'])){
+	// 		$notification = $this->notification->update_notification_by_id($_POST['id']);
+	// 	}
+	// }
+
 	public function add_event_passive(){
+		$event['event_id'] = $_POST['event_id'];
+		$event['is_join'] = $_POST['is_join'];
+
+		$event['user_id'] = $this->user->id;
+
+		$this->eventP->setEvent($event);
+		$response['data'] = $this->calendar->eventPassive_add($this->eventP->getEvent());
+
+		echo json_encode($response, true);
+		
+	}
+
+	public function update_event_passive(){
+		$event['event_id'] = $_POST['event_id'];
+		$event['is_cancel'] = $_POST['is_cancel'];
+
+		$event['user_id'] = $this->user->id;
+
+		$this->eventP->setEvent($event);
+		$response['data'] = $this->calendar->eventPassive_update($this->eventP->getEvent());
+
+		echo json_encode($response, true);
 		
 	}
 
