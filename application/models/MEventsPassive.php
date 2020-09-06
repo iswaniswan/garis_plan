@@ -16,6 +16,17 @@ Class MEventsPassive extends MSql {
   private $is_cancel = 'is_cancel';
   private $updated_date = 'updated_date';
 
+  public function insert_update_event_passive($event){
+    // check if exist
+    $query = "SELECT * FROM " . $this->table . " WHERE event_id=" . $event['event_id'] . " AND user_id=" . $event['user_id'];
+    $exist = $this->db->query($query)->result();
+    if($exist){
+      return $this->update_events_passive($event);
+    }else{
+      return $this->insert_event_passive($event);
+    }
+  }
+
   public function insert_event_passive($event){
     $insert = "INSERT INTO " . $this->table . " (" . $this->user_id . ", " . $this->event_id . 
         ", " . $this->is_join . ") ";
@@ -27,11 +38,16 @@ Class MEventsPassive extends MSql {
   }
 
   public function update_events_passive($event){
+    if(isset($event['id']) && $event['id'] != 0){
+      $where = " WHERE id='" . $event['id'] . "'";
+    }else{
+      $where = " WHERE event_id=" . $event['event_id'] . " AND user_id=" . $event['user_id'];
+    }
     $update = "UPDATE " . $this->table . " SET " . 
       $this->user_id . "='" . $event['user_id'] . "', " .
       $this->event_id . "=" . $event['event_id'] . ", " .
-      $this->is_cancel . "=" . $event['is_cancel'] . ", " .
-      " WHERE id='" . $id . "'";
+      $this->is_join . "=" . $event['is_join'] . ", " .
+      $this->is_cancel . "=" . $event['is_cancel'] . $where;
 
     $query = $this->db->query($update);
     return parent::success_query();

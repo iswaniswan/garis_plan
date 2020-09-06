@@ -150,12 +150,16 @@ function loadComponentScheduleBoard(data){
 }
 
 async function loadEvents(){
-    let hrisEvents = []; // izin hris unsplit
+    // izin hris unsplit
+    let hrisEvents = []; 
     let companyEvents = [];
     let holidayEvents = [];
     let privateEvents = [];
     let groupEvents = [];
-    const dt_calendar = await fetchCalendarEvents();
+
+    // event yg tampil di schedule board, hanya private dan group, dan tidak di split
+    let boardEvents = [];
+    const dt_calendar = await api_CalendarEvents();
     dt_calendar.forEach(r => {
         let dtStartStr = dateTimeStrToDateStr(r.date_start);
         let dtEndStr = dateTimeStrToDateStr(r.date_end);
@@ -168,24 +172,47 @@ async function loadEvents(){
         });
         
         if(r.type === 'private'){
-            let eve = new Izin(r.title, dtStartStr, dtEndStr, description, extendedProps)
-            privateEvents.push(eve);
+            let eve = new Izin(r.title, dtStartStr, dtEndStr, description, extendedProps);
+            boardEvents.push(eve);
+            if(eve.start !== eve.end){
+                console.log("split")
+                let eventToSplit = $(this).splitEvent(eve, 'private');
+                privateEvents.push(...eventToSplit);
+            }else{
+                privateEvents.push(eve);
+            }
         }else if(r.type === 'global'){
             let eve = new Holiday(r.title, dtStartStr, dtEndStr, description, extendedProps);
-            holidayEvents.push(eve);
+            if(eve.start !== eve.end){
+                let eventToSplit = $(this).splitEvent(eve, 'global');
+                holidayEvents.push(...eventToSplit);
+            }else{
+                holidayEvents.push(eve);
+            }
         }else if(r.type === 'group'){
             let eve = new Meeting(r.title, dtStartStr, dtEndStr, description, extendedProps);
-            groupEvents.push(eve);
+            boardEvents.push(eve);
+            if(eve.start !== eve.end){
+                let eventToSplit = $(this).splitEvent(eve, 'group');
+                groupEvents.push(...eventToSplit);
+            }else{
+                groupEvents.push(eve);
+            }
         }else if(r.type === 'branch'){
             let eve = new Cuti(r.title, dtStartStr, dtEndStr, description, extendedProps);
-            companyEvents.push(eve);
+            if(eve.start !== eve.end){
+                let eventToSplit = $(this).splitEvent(eve, 'branch');
+                companyEvents.push(...eventToSplit);
+            }else{
+                companyEvents.push(eve);
+            }
         }
     }); 
 
-    let boardEvents = [].concat(privateEvents, groupEvents);
+    // let boardEvents = [].concat(privateEvents, groupEvents);
     loadComponentScheduleBoard(boardEvents);
 
-    const dt_hris = await fetchDataHris();
+    const dt_hris = await api_DataHris();
     dt_hris.data.forEach(data => {
         let h_extProps = {
             name: data.nama,
@@ -230,6 +257,7 @@ async function loadEvents(){
     });
     // let eventsAll = [].concat.apply([], [array1, array2, ...]);
     let events_combined = [].concat.apply([], [companyEvents, holidayEvents, privateEvents, groupEvents, hrisEventCombined]);
+    
     renderCalendar(events_combined);
 };
 
@@ -256,6 +284,38 @@ async function loadEvents(){
         }
         // return as array of Event
         return extEvent; 
+    }
+
+    $.fn.splitEvent = function(event, type){
+        let eventDiff = moment(event.end, 'YYYY-MM-DD').diff(
+            moment(event.start, 'YYYY-MM-DD'), 'days'
+        );
+        let description = event.description;
+        let extEvent = [];
+        for(let i=0; i<=eventDiff; i++){
+            let currDate = moment(event.start, 'YYYY-MM-DD').add(i, 'days');
+            let currDateStr = currDate.format('YYYY-MM-DD');
+            let nEvent;
+            switch(type){
+                case 'private':
+                    nEvent = new Izin(event.title, currDateStr, currDateStr, description, event.extendedProps);
+                    break;
+                case 'group':
+                    nEvent = new Meeting(event.title, currDateStr, currDateStr, description, event.extendedProps);
+                    break;
+                case 'global':
+                    nEvent = new Holiday(event.title, currDateStr, currDateStr, description, event.extendedProps);
+                    break;
+                case 'branch':
+                    nEvent = new Cuti(event.title, currDateStr, currDateStr, description, event.extendedProps);
+                    break;
+                default:
+                    break;
+            }
+            extEvent.push(nEvent);
         }
+        return extEvent; 
+    }
+
 }(jQuery));
 </script>

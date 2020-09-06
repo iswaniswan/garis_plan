@@ -11,7 +11,7 @@
 </style>
 
 <div class="section-header">
-    <h1 class="">Set Day Mark</h1>
+    <h1 class="">Daily event</h1>
 </div>
 <div class="row">
     <div class="col-8 mx-auto">
@@ -153,7 +153,7 @@ function isDateValid( element, duration){
 }
 
 async function getUser(){
-    const dt_json = await fetchUserHris();
+    const dt_json = await api_UserHris();
     const users = dt_json.data;
 
     const cmp_user_list = users.map((user, index) =>{
@@ -162,13 +162,13 @@ async function getUser(){
     $('#user-selection').html(cmp_user_list);
 }
 
-async function setDayOff(params){
+async function eventDailySubmit(params){
 
-    const result = await fetchNewRoomReservation(params);
+    const result = await api_roomReservationOrderSubmit(params);
     if(result.data == true){
         let modal = await new Components().simpleModalSuccess();
         $('form').empty().append(modal);
-        $('a[name="activity-event-dayoff"]').trigger('click');
+        $('a[name="activity-event-daily"]').trigger('click');
     }
 }
 
@@ -250,7 +250,7 @@ $(document).ready(function(){
                     branch: branch || '',
                     participant: $(this).find('select[name="participant"]').val(),
                 }
-                setDayOff(form);
+                eventDailySubmit(form);
             }else{
                 console.log("invalid")
             }

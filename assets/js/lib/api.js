@@ -5,39 +5,39 @@ const SERVER_API = 'http://assetsmanagement.lan/';
 // const SERVER_API = 'http://localhost:1381/';
 // const SERVER_API = 'http://172.73.1.94/';
 
-async function fetchUserprofile(){
+async function api_Userprofile(){
     const res = await fetch(SERVER_API + 'assets/json/hris_profile.json');
     const data = await res.json();
     return data;
 }
 
-async function fetchDataHris(){
+async function api_DataHris(){
     const res = await fetch(SERVER_API + 'assets/json/data_izin.json');
     // const res = await fetch(SERVER_API + 'rest/rest-izin.php/data?tgl=2020-01-01&tgl_end=2020-08-01');
     const data = await res.json();
     return data;
 }
 
-async function fetchUserHris(){
+async function api_UserHris(){
     const res = await fetch(SERVER_API + 'assets/json/hris_user.json');
     // const res = await fetch(SERVER_API + 'rest/rest-user.php/data');
     const data = await res.json();
     return data;
 }
 
-async function fetchCalendarEvents(){
+async function api_CalendarEvents(){
     const res = await fetch('Home/calendar_events');
     const data = await res.json();
     return data;
 }
 
-async function fetchFacilities(){
-    const res = await fetch('Home/fetchFacilities');
+async function api_Facilities(){
+    const res = await fetch('settings/facilities_id_name');
     const data = await res.json();
     return data;
 }
 
-async function fetchFacilityById(id){
+async function api_FacilityById(id){
     let form = new FormData();
     form.append('id', id);
 
@@ -46,7 +46,7 @@ async function fetchFacilityById(id){
         body: form
     }    
     
-    const res = await fetch(SERVER_API+"Home/fetchFacilityById", requestOptions)
+    const res = await fetch(SERVER_API+"settings/facility_get_by_id", requestOptions)
         .then(result => {return result})
         .catch(error => console.log('error', error));    
     const data = await res.json();
@@ -54,13 +54,7 @@ async function fetchFacilityById(id){
     return data;
 }
 
-async function fetchRoomByID(id){
-    // headers optional
-    // let myHeaders = new Headers();
-    // myHeaders.append({
-    //     'Accept': 'application/json, text/plain, */*',
-    //     'Content-Type': 'application/json'
-    // });
+async function api_RoomByID(id){
 
     let formdata = new FormData();
     formdata.append("id", id);
@@ -71,14 +65,14 @@ async function fetchRoomByID(id){
     redirect: 'follow'
     };
 
-    const res = await fetch(SERVER_API+"/Home/room_view", requestOptions)
+    const res = await fetch(SERVER_API+"/settings/room_view", requestOptions)
         .then(result => {return result})
         .catch(error => console.log('error', error));
     const data = await res.json();
     return data.data;
 }
 
-async function fetchNewRoom(payload){
+async function api_NewRoom(payload){
     let arrIntFacilities = [];
     payload.facilities.map(x=>{
         return arrIntFacilities.push(parseInt(x));
@@ -98,7 +92,7 @@ async function fetchNewRoom(payload){
         body: form
     }    
     
-    const res = await fetch(SERVER_API+"Home/room_insert", requestOptions)
+    const res = await fetch(SERVER_API+"settings/room_insert", requestOptions)
         .then(result => {return result})
         .catch(error => console.log('error', error));    
     const data = await res.json();
@@ -106,7 +100,7 @@ async function fetchNewRoom(payload){
     return data;
 }
 
-async function fetchUpdateRoom(payload){
+async function api_UpdateRoom(payload){
     let arrIntFacilities = [];
     payload.facilities.map(x=>{
         return arrIntFacilities.push(parseInt(x));
@@ -126,7 +120,7 @@ async function fetchUpdateRoom(payload){
         body: form
     }    
     
-    const res = await fetch(SERVER_API+"Home/room_update", requestOptions)
+    const res = await fetch(SERVER_API+"settings/room_update", requestOptions)
         .then(result => {return result})
         .catch(error => console.log('error', error));    
     const data = await res.json();
@@ -134,7 +128,7 @@ async function fetchUpdateRoom(payload){
     return data;
 }
 
-async function fetchNewRoomReservation(payload){
+async function api_roomReservationOrderSubmit(payload){
     let arrUser = [];
     payload.participant.map(x=>{
         return arrUser.push(parseInt(x));
@@ -154,7 +148,7 @@ async function fetchNewRoomReservation(payload){
         body: form
     }    
     
-    const res = await fetch(SERVER_API+"Home/reserve_room_submit", requestOptions)
+    const res = await fetch(SERVER_API+"Activity/room_reservation_order_submit", requestOptions)
         .then(result => {return result})
         .catch(error => console.log('error', error));    
     const data = await res.json();
@@ -162,13 +156,13 @@ async function fetchNewRoomReservation(payload){
     return data;
 }
 
-async function fetchUserNotification(){
-    const res = await fetch('Home/get_user_notification_alert');
+async function api_UserNotification(){
+    const res = await fetch('activity/notification_get_user_alert');
     const data = await res.json();
     return data;   
 }
 
-async function fetchDetailNotification(params){
+async function api_DetailNotification(params){
     let form = new FormData();
     form.append("id", params);
 
@@ -176,14 +170,14 @@ async function fetchDetailNotification(params){
         method: 'POST',
         body: form
     }  
-    const res = await fetch('Home/get_notification_by_id', requestOptions)
+    const res = await fetch('activity/notification_get_by_id', requestOptions)
         .then(result => {return result})
         .catch(error => console.log('error', error));   ;
     const data = await res.json();
     return data;
 }
 
-async function fetchNotificationHasRead(params){
+async function api_NotificationHasRead(params){
     let form = new FormData();
     form.append("id", params);
 
@@ -191,37 +185,24 @@ async function fetchNotificationHasRead(params){
         method: 'POST',
         body: form
     }  
-    const res = await fetch('Home/set_notification_has_read', requestOptions)
+    const res = await fetch('activity/notification_set_has_read', requestOptions)
         .then(result => {return result})
-        .catch(error => console.log('error', error));   ;
-}
-
-async function fetchPassiveEventAdd(params){
-    let form = new FormData();
-    form.append("event_id", params.event_id);
-    form.append("is_join", params.is_join);
-
-    let requestOptions = {
-        method: 'POST',
-        body: form
-    }  
-    const res = await fetch('Home/add_event_passive', requestOptions)
-        .then(result => {return result})
-        .catch(error => console.log('error', error)); 
+        .catch(error => console.log('error', error));   
     return res;
 }
 
-async function fetchPassiveEventUpdate(params){
+async function api_PassiveEventInsertUpdate(params){
     let form = new FormData();
-    form.append("event_id", params.event_id);
-    form.append("is_cancel", params.is_cancel);
+    form.append('event_id', params.event_id);
+    form.append('is_join', params.is_join);
+    form.append('is_cancel', params.is_cancel);
 
     let requestOptions = {
         method: 'POST',
         body: form
     }  
-    const res = await fetch('Home/update_event_passive', requestOptions)
-        .then(result => {return result})
+    const res = await fetch('activity/notification_insert_update_event_passive', requestOptions)
+        .then(result => {return result.json()})
         .catch(error => console.log('error', error)); 
     return res;
 }

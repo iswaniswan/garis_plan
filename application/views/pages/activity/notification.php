@@ -30,6 +30,7 @@
                     </thead>
                     <tbody>
                         <?php
+                        if($notification){
                         $i = 1;
                         foreach ($notification as $n){
                             ?>
@@ -59,6 +60,7 @@
                             </tr>
                             <?php
                             $i++;
+                            }
                         }
                         ?>
                     </tbody>
@@ -76,7 +78,7 @@ async function actionNotification(e){
 
     if(is_read == 0){
         // set notif has read
-        fetchNotificationHasRead(id);
+        api_NotificationHasRead(id);
     }
 
     $('#notification_wrapper')

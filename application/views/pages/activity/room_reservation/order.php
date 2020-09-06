@@ -23,14 +23,14 @@
                 <h4>New reservation</h4>
             </div>
             <div class="card-body">
-                <form action="Home/reserve_room_submit" methods="POST" class="needs-validation" novalidate="" onsubmit="event.preventDefault();">
+                <form action="" methods="POST" class="needs-validation" novalidate="" onsubmit="event.preventDefault();">
                     <div class="section-title mt-0 text-primary mb-5">Room</div>
                     <!-- room select -->
                     <div class="form-group">
                         <div class="row">
                             <div class="col-6">
                                 <label>choose room</label>
-                                <select class="form-control select2" id="select_room" required="" >
+                                <select class="form-control select2" id="select_room" name="name" required="" >
                                     <option></option>
                                     <?php 
                                         for($i=0; $i<count($room); $i++){
@@ -184,7 +184,7 @@ function isParticipantValid(element){
 }
 
 async function getUser(){
-    const dt_json = await fetchUserHris();
+    const dt_json = await api_UserHris();
     const users = dt_json.data;
 
     const cmp_user_list = users.map((user, index) =>{
@@ -193,24 +193,22 @@ async function getUser(){
     $('#user-selection').html(cmp_user_list);
 }
 
-async function reserveRoomSubmit(e){
+async function roomReservationOrderSubmit(e){
     let params = {
         start: $(e).find('input[name="start"]').val() + ' 00:00:00',
         end: $(e).find('input[name="start"]').val() + ' 00:00:00',
         title: $(e).find('input[name="title"]').val(),
         type: 'group',
-        note: $(e).find('input[name="note"]').val() || '',
+        note: $(e).find('textarea[name="description"]').val() || '',
         participant: $(e).find('select[name="participant"]').val(),
         room_id: $(e).find('select[name="name"]').val(),
     }
-    console.log("reserveRoomSubmit -> params", params);
 
-    const result = await fetchNewRoomReservation(params);
-    console.log("reserveRoomSubmit -> result", result)
+    const result = await api_roomReservationOrderSubmit(params);
     if(result.data == true){
         let modal = await new Components().simpleModalSuccess();
         $('form').empty().append(modal);
-        $('a[name="activity-event-reservation"]').trigger('click');
+        $('a[name="activity-room_reservation-table"]').trigger('click');
     }
 }
 
@@ -286,7 +284,7 @@ $(document).ready(function(){
         event.preventDefault();
         event.stopPropagation();
         }else{
-            reserveRoomSubmit(form);
+            roomReservationOrderSubmit(form);
         }
         form.addClass('was-validated');
     });

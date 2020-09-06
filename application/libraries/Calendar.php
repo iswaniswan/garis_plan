@@ -19,21 +19,25 @@ class Calendar {
         $this->CI->load->Model('MEventsPassive');
         $this->CI->load->Model('MNotification');
 
-        // $this->event = new Event();
         $this->utils = new Utils();
         $this->user = new User();
-
-        // $this->eventP = new EventPassive();
     }
 	
-	public function get_all_data(){
-		return $this->CI->MEvents->get(null, null, null, null);
-    }
+	// public function get_all_data(){
+	// 	return $this->CI->MEvents->get(null, null, null, null);
+    // }
+
+    // public function get_user_event(){
+    //     $user = $this->user->id;
+    //     $where = '(type="global" or updated_by=' . $user . ') ';
+    //     return $this->CI->MEvents->get(null, $where, null, null);
+    // }
 
     public function get_user_event(){
         $user = $this->user->id;
-        $where = '(type="global" or updated_by=' . $user . ') ';
-        return $this->CI->MEvents->get(null, $where, null, null);
+        $select_join = " * FROM events as e left join events_passive as ep on e.id = ep.event_id ";
+        $where = " (e.type='global' or e.updated_by=" . $user . " or ep.is_join=1) AND is_deleted=0 ";
+        return $this->CI->MEvents->get_join($select_join, $where, null, null);
     }
     
     public function event_add($event){
@@ -57,12 +61,8 @@ class Calendar {
         }
     }
 
-    public function eventPassive_add($event){
-        return $this->CI->MEventsPassive->insert_event_passive($event);
-    }
-
-    public function eventPassive_update($event){
-        return $this->CI->MEventsPassive->update_event_passive($event);
+    public function eventPassive_insert_update($event){
+        return $this->CI->MEventsPassive->insert_update_event_passive($event);
     }
 
 }

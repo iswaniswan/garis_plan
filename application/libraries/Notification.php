@@ -31,6 +31,7 @@ class Notification {
         $order = ' updated_date DESC ';
         $query = $this->CI->MNotification->get(null, $where, null, $order);
 
+        $notif = null;
         $i=0;
 		foreach($query as $q){        
 			foreach($q as $key=>$val){
@@ -49,7 +50,8 @@ class Notification {
             $i++;
         }
         // echo json_encode($notif);
-        return $notif;
+        $result = ($notif != null ? $notif : null);
+        return $result;
     }
 
     public function get_detail_notification($id){

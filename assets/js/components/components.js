@@ -152,7 +152,7 @@ class Components {
 
     formRoom = async function(data){
         const disabled = (data.mode === 'view' ? 'disabled' : '');
-        const dt_json = await fetchRoomByID(data.id);     
+        const dt_json = await api_RoomByID(data.id);     
         const room = dt_json.room;
         const facilities = dt_json.facilities;
         const form = `
@@ -166,7 +166,7 @@ class Components {
                         </div>
                     </div>
                     <div class="card-body">
-                        <form action="Home/room_view" methods="POST" class="needs-validation" novalidate=""
+                        <form action="settings/room_view" methods="POST" class="needs-validation" novalidate=""
                             onsubmit="event.preventDefault(); submitUpdateRoom(this);" id="${data.id}">
                             <div class="section-title mt-0 mb-5 strong">${data.mode.toUpperCase()}</div>
                             
@@ -267,7 +267,7 @@ class Components {
                             <h4>Confirm DELETE</h4>
                         </div>
                         <div class="card-body">
-                            <form action="Home/room_update_delete" methods="POST" onsubmit="event.preventDefault(); submitDeleteRoom(this);">
+                            <form action="settings/room_update_delete" methods="POST" onsubmit="event.preventDefault(); submitDeleteRoom(this);">
                                 <input type="text" class="d-none" name="id" value="${data.id}">
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
@@ -281,7 +281,7 @@ class Components {
     }
 
     formAddRoom = async function(data){
-        const facilities = await fetchFacilities();
+        const facilities = await api_Facilities();
         const form = `
         <div class="row justify-content-center" id="form_room" style="display:none">
             <div class="col-8">
@@ -381,7 +381,7 @@ class Components {
 
     formFacility = async function(data){
         const disabled = (data.mode === 'view' ? 'disabled' : '');
-        const dt_json = await fetchFacilityById(data.id);     
+        const dt_json = await api_FacilityById(data.id);     
         const fac = dt_json;        
         const form = `
         <div class="row justify-content-center" id="form_facility" style="display:none">
@@ -394,7 +394,7 @@ class Components {
                         </div>
                     </div>
                     <div class="card-body">
-                        <form action="Home/room_view" methods="POST" class="needs-validation" novalidate=""
+                        <form action="settings/room_view" methods="POST" class="needs-validation" novalidate=""
                             onsubmit="event.preventDefault(); submitUpdateFacility(this);" id="${data.id}">
                             <div class="section-title mt-0 mb-5 strong">${data.mode.toUpperCase()}</div>
                             
@@ -533,7 +533,7 @@ class Components {
     }
 
     notification_form = async function(id){
-        const data = await fetchDetailNotification(id)
+        const data = await api_DetailNotification(id)
         const date_start = moment(data.date_start, 'YYYY-MM-DD HH:mm:ss').format('DD MMM YY');
         const date_end = moment(data.date_end, 'YYYY-MM-DD HH:mm:ss').format('DD MMM YY');
         const dateString = (date_start === date_end ? date_start : date_start + ' - ' + date_end);

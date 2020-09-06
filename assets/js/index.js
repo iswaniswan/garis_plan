@@ -6,6 +6,7 @@ $(document).ready(function(){
      */
     let sidebar_menu = $("#sidebar_menu a");
     let content_page = $("#main_content");
+    const content_body = $('body');
 
     sidebar_menu.each(function(){
         $(this).click(function(event){
@@ -13,6 +14,10 @@ $(document).ready(function(){
             let valid_url = $(this).attr("href");
             if(valid_url !== "#"){
                 $(this).custom_callback(valid_url, content_page);
+                // for mobile view mode
+                if(content_body.hasClass('sidebar-show')){
+                    content_body.removeClass('sidebar-show').addClass('sidebar-gone');
+                }
             }
         });
     }); 
@@ -47,7 +52,7 @@ async function actionNotificationNavbar(e){
         let form = await new Components().notification_form(id);
         let content = header + form;
         // set notif has read
-        fetchNotificationHasRead(id);
+        api_NotificationHasRead(id);
 
         $("#main_content").empty().append(content);
         $(form).toggleButton();
@@ -59,27 +64,24 @@ async function actionNotificationNavbar(e){
 // remove form notification
 function removeForm(){
     $('#notification_wrapper').empty();
-    $('a[name="activity-event-notification"]').trigger('click');
+    $('a[name="activity-notification"]').trigger('click');
 }
 
 async function setPassiveEvent(e){
     let is_join_input = ($(e).find('input[name="is_join"]').length >= 1);
-    if(is_join_input){
-        let params = {
-            event_id: $(e).find('input[name="event_id"]').val(),
-            is_join: $(e).find('input[name="is_join"]').val()
-        };
-        console.log("setPassiveEvent -> params", params)
-        const res = await fetchPassiveEventAdd(params);
-        console.log("setPassiveEvent -> res", res)
-    }else{
-        let params = {
-            event_id: $(e).find('input[name="event_id"]').val(),
-            is_cancel: $(e).find('input[name="is_cancel"]').val()
-        };
-        console.log("setPassiveEvent -> params", params)
-        const res = await fetchPassiveEventUpdate(params);
-        console.log("setPassiveEvent -> res", res)
+    let is_join = (is_join_input ? 1 : 0);
+    let is_cancel = (is_join_input ? 0 : 1);
+
+    let params = {
+        event_id: $(e).find('input[name="event_id"]').val(),
+        is_join: is_join,
+        is_cancel: is_cancel
+    };
+
+    const res = await api_PassiveEventInsertUpdate(params);
+    if(res.data == true){
+        new Components().simpleModalSuccess();
+        removeForm();
     }
 }
 
@@ -100,7 +102,7 @@ async function setPassiveEvent(e){
 
     $.fn.get_user_notification = async function(){
 
-        const data = await fetchUserNotification();
+        const data = await api_UserNotification();
         console.log("data notif", data);
         data.sort((a, b) =>{
             return (moment(b.updated_date, 'YYYY-MM-DD HH:mm:ss') - moment(a.updated_date, 'YYYY-MM-DD HH:mm:ss'));

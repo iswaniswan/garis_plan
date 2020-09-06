@@ -12,7 +12,7 @@ td a.hover {
 }
 </style>
 <div class="section-header">
-    <h1 class="">Facilities</h1>
+    <h1 class="">Facilities settings</h1>
 </div>
 <div id="facility_wrapper">
     <div class="card" id="facility_content">

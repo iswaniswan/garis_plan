@@ -17,25 +17,28 @@
             <li class="menu-header">Activity</li>
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
-                    <i class="fas fa-columns"></i><span>Room reservation</span>
+                    <i class="fas fa-pen-square"></i><span>Room reservation</span>
                 </a>
                 <ul class="dropdown-menu">
                     <!-- <li><a class="nav-link" name="activity-event-room" href="layout-default.html">Dashboard</a></li> -->
-                    <li><a class="nav-link" name="activity-event-reservation" href="<?= base_url('activity/event/reservation'); ?>">List</a></li>
-                    <li><a class="nav-link" name="activity-event-reservation" href="<?= base_url('activity/event/reservation'); ?>">Order</a></li>
+                    <li><a class="nav-link" name="activity-room_reservation-summary" href="<?= base_url('activity/room/reservation/summary'); ?>">summary</a></li>
+                    <li><a class="nav-link d-none" name="activity-room_reservation-order" href="<?= base_url('activity/room/reservation/order'); ?>">order</a></li>
+                    <li><a class="nav-link" name="activity-room_reservation-table" href="<?= base_url('activity/room/reservation/table'); ?>">table</a></li>
                 </ul>
             </li>
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
-                    <i class="fas fa-columns"></i><span>Event</span>
+                    <i class="fas fa-pen-square"></i><span>Event</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" name="activity-event-dayoff" href="<?= base_url('activity/event/dayoff'); ?>">Daily</a></li>
+                    <li><a class="nav-link" name="activity-event-summary" href="<?= base_url('activity/event/summary'); ?>">summary</a></li>
+                    <li><a class="nav-link d-none" name="activity-event-order" href="<?= base_url('activity/event/order'); ?>">order</a></li>
+                    <li><a class="nav-link" name="activity-event-table" href="<?= base_url('activity/event/table'); ?>">table</a></li>
                 </ul>
             </li>
             <li>
-                <a class="nav-link" name="activity-event-notification" href="<?= base_url('activity/event/notification'); ?>">
-                    <i class="fas fa-columns"></i><span>Notification</span>
+                <a class="nav-link" name="activity-notification" href="<?= base_url('activity/notification'); ?>">
+                    <i class="fas fa-pen-square"></i><span>Notification</span>
                 </a>
             </li>
             
@@ -52,13 +55,28 @@
             <li class="nav-item dropdown">
                 <li class="menu-header">Report</li>
                 <li class="nav-item dropdown">
-                    <a href="#" class="nav-link has-dropdown">
-                        <i class="fas fa-columns"></i><span>Reserved room</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="nav-link" href="#">Room</a></li>
-                    </ul>
-                </li>
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-clipboard"></i><span>Room reservation</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <!-- <li><a class="nav-link" name="activity-event-room" href="layout-default.html">Dashboard</a></li> -->
+                    <li><a class="nav-link" name="report-room_reservation-summary" href="<?= base_url('report/room/reservation/summary'); ?>">List</a></li>
+                    <li><a class="nav-link" name="report-room_reservation-order" href="<?= base_url('report/room/reservation/order'); ?>">Order</a></li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-clipboard"></i><span>Event</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="nav-link" name="report-event-daily" href="<?= base_url('report/event/daily'); ?>">Daily</a></li>
+                </ul>
+            </li>
+            <li>
+                <a class="nav-link" name="report-notification" href="<?= base_url('report/notification'); ?>">
+                    <i class="fas fa-clipboard"></i><span>Notification</span>
+                </a>
+            </li>
 
                 <!-- <li class="nav-item dropdown">
                     <a href="#" class="nav-link has-dropdown">
@@ -71,7 +89,7 @@
             <li class="menu-header">Settings</li>
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown">
-                    <i class="fas fa-columns"></i><span>Data</span>
+                    <i class="fas fa-cog"></i><span>Data</span>
                 </a>
                 <ul class="dropdown-menu">
                     <li><a name="settings-data-room" href="<?= base_url('settings/data/room'); ?>">Room</a></li>

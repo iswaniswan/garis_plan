@@ -34,6 +34,21 @@ Class MSql extends CI_Model {
     return $this->db->query($sql)->result_array(); 
   }
 
+  public function get_join($select='', $where='', $group='', $order=''){
+    $select = ($select !== null ? $select : ' * ');
+    $sql = $this->select . $select;
+    if($where != ''){
+      $sql .= $this->where . $where ;
+    }
+    if($group != ''){
+        $sql .= $this->group . $group;
+    }
+    if($order != ''){
+        $sql .= $this->order . $order;
+    }
+    return $this->db->query($sql)->result_array(); 
+  }
+
   public function insert(){
 
   }

@@ -12,7 +12,7 @@ td a.hover {
 }
 </style>
 <div class="section-header">
-    <h1 class="">ROOM</h1>
+    <h1 class="">Room settings</h1>
 </div>
 
 <div id="room_wrapper">
@@ -95,7 +95,7 @@ function submitDeleteRoom(e){
     let payload = $(e).serialize();
     $.ajax({
         type: "POST",
-        url: "Home/room_update_delete",
+        url: "settings/room_update_delete",
         data: payload,
         dataType: "json",
         success: function(response) {
@@ -119,7 +119,7 @@ async function submitNewRoom(e){
         floor: $(e).find('input[name="floor"]').val(),
         is_available: is_available,
     }
-    const result = await fetchNewRoom(payload);
+    const result = await api_NewRoom(payload);
     removeForm();
     
 }
@@ -136,7 +136,7 @@ async function submitUpdateRoom(e){
         floor: $(e).find('input[name="floor"]').val(),
         is_available: is_available,
     }
-    const result = await fetchUpdateRoom(payload);
+    const result = await api_UpdateRoom(payload);
     removeForm();    
 }
 
