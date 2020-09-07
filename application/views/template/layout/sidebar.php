@@ -92,10 +92,12 @@
                     <i class="fas fa-cog"></i><span>Data</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a name="settings-data-room" href="<?= base_url('settings/data/room'); ?>">Room</a></li>
-                    <li><a name="settings-data-facilities" href="<?= base_url('settings/data/facilities'); ?>">Facilities</a></li>
-                    <li><a href="<?= base_url('settings/data/vehicle'); ?>">Vehicle</a></li>
-                    <li><a href="<?= base_url('settings/data/user'); ?>">User</a></li>
+                    <li><a class="nav-link" name="settings-data-holiday" href="<?= base_url('settings/data/holiday'); ?>">Holiday</a></li>
+                    <li><a class="nav-link d-none" name="settings-data-holiday-order" href="<?= base_url('settings/data/holiday/order'); ?>">order holiday</a></li>
+                    <li><a class="nav-link" name="settings-data-room" href="<?= base_url('settings/data/room'); ?>">Room</a></li>
+                    <li><a class="nav-link" name="settings-data-facilities" href="<?= base_url('settings/data/facilities'); ?>">Facilities</a></li>
+                    <li><a class="nav-link" name="" href="<?= base_url('settings/data/vehicle'); ?>">Vehicle</a></li>
+                    <li><a class="nav-link" name="" href="<?= base_url('settings/data/user'); ?>">User</a></li>
                 </ul>
             </li>
         </ul>

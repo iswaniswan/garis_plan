@@ -112,4 +112,15 @@ class Settings extends Home {
 		// return $this->load->view('pages/settings/data/user');
 	}
 
+	// settings
+
+	public function holiday(){
+		$data['event'] = $this->calendar->settings_holiday();
+		return $this->load->view('pages/settings/data/holiday', $data);
+	}
+
+	public function holiday_order(){
+		return $this->load->view('pages/settings/data/holiday_order');
+	}
+
 }

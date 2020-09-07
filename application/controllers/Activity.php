@@ -12,13 +12,8 @@ class Activity extends Home {
 
 	// room reservation
 
-	// public function room_reservation_list(){
-	// 	$data['room'] = $this->room->get_room();
-	// 	return $this->load->view('pages/activity/room_reservation/list', $data);
-	// }
-
 	public function room_reservation_summary(){
-		$data['room'] = $this->room->get_summary();
+		$data['room'] = $this->room->get_room_summary();
 		return $this->load->view('pages/activity/room_reservation/summary', $data);
 	}
 
@@ -78,7 +73,8 @@ class Activity extends Home {
 
 	// event 
 	public function event_summary(){
-		return $this->under_construction();
+		$data['event'] = $this->calendar->event_summary();
+		return $this->load->view('pages/activity/event/summary', $data);
 	}
 
 	public function event_order(){
@@ -87,7 +83,8 @@ class Activity extends Home {
 	}
 
 	public function event_table(){
-		return $this->under_construction();
+		$data['event'] = $this->calendar->event_table();
+		return $this->load->view('pages/activity/event/table', $data);
 	}
 
 	// notification

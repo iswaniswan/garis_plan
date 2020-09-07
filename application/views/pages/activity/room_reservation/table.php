@@ -45,7 +45,7 @@
                                 </td>
                                 <td class="align-middle">
                                     <a href="#" class="btn btn-secondary" name="view" id="<?= $r['id']; ?>" onclick="actionRoom(this);">detail</a>
-                                    <a href="#" class="btn btn-info" name="edit" id="<?= $r['id']; ?>" onclick="actionRoom(this);">manage <?= $r['updated_by'] ?></a>
+                                    <a href="#" class="btn btn-info" name="edit" id="<?= $r['id']; ?>" onclick="actionRoom(this);">manage</a>
                                 </td>
                             </tr>
                             <?php

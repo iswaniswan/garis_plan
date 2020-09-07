@@ -20,6 +20,7 @@
                         </div>
                         <div class="card-body">
                             <div class="">
+                                <?= strToUpper($r['location']); ?>
                             </div>
                         </div>
                     </div>
