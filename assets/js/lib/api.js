@@ -206,3 +206,15 @@ async function api_PassiveEventInsertUpdate(params){
         .catch(error => console.log('error', error)); 
     return res;
 }
+
+async function api_ActivityRoomReservationTableGetRoom(params){
+    let form = new FormData();
+    form.append('id', params.id);
+
+    let requestOptions = { method: 'POST', body: form }
+
+    const res = await fetch('activity/room/reservation/table/get', requestOptions)
+        .then(result => { return result.json() })
+        .catch(error => { console.log('error', error) })
+    return res;
+}

@@ -54,8 +54,8 @@
                                         ?>
                                     </td>
                                     <td class="align-middle">
-                                        <a href="#" class="btn btn-light" name="view" id="<?= $r['id']; ?>" onclick="actionRoom(this);">detail</a>
-                                        <a href="#" class="btn btn-dark" name="edit" id="<?= $r['id']; ?>" onclick="actionRoom(this);">manage</a>
+                                        <a href="#" class="btn btn-secondary" name="view" id="<?= $r['id']; ?>" onclick="actionRoom(this);">detail</a>
+                                        <a href="#" class="btn btn-info" name="edit" id="<?= $r['id']; ?>" onclick="actionRoom(this);">endswitch</a>
                                     </td>
                                 </tr>
                                 <?php

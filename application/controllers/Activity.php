@@ -36,6 +36,14 @@ class Activity extends Home {
 		return $data;
 	}
 
+	public function room_reservation_table_get(){
+		$id = (empty($_POST['id']) || $_POST['id'] == null ? $valid = false : $_POST['id'] );
+		if($id){
+			$data = $this->room->activity_room_by_id($id);
+			echo json_encode($data, true);
+		}
+	}
+
 	public function room_reservation_table(){
 		$data['room'] = $this->room->activity_room();
 		$data['t'] = $this->load->view('pages/activity/room_reservation/table', $data);

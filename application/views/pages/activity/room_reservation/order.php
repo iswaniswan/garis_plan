@@ -14,17 +14,20 @@
 </style>
 
 <div class="section-header">
-    <h1 class="">Reserve room</h1>
+    <h1 class=""><br/></h1>
 </div>
 <div class="row">
     <div class="col-8 mx-auto">
         <div class="card">
-            <div class="card-header d-none">
-                <h4>New reservation</h4>
+            <div class="card-header">
+                <h4> </h4>
+                <div class="card-header-action">
+                    <a class="btn btn-icon btn-info" href="#" onClick="removeForm();"><i class="fas fa-times"></i> Back </a>
+                </div>
             </div>
             <div class="card-body">
                 <form action="" methods="POST" class="needs-validation" novalidate="" onsubmit="event.preventDefault();">
-                    <div class="section-title mt-0 text-primary mb-5">Room</div>
+                    <div class="section-title mt-0 text-primary mb-5">Add</div>
                     <!-- room select -->
                     <div class="form-group">
                         <div class="row">
@@ -132,6 +135,10 @@
 </div>
 
 <script type="text/javascript">
+
+function removeForm(){
+    $('a[name="activity-room_reservation-table"]').trigger('click');
+}
 
 function hideCard(){
     $('#room_info').hide('slow', function(){

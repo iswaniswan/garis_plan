@@ -1,10 +1,10 @@
 <div class="section-header">
-    <h1 class="">Rooms event</h1>
+    <h1 class="">Table</h1>
 </div>
 <div id="room_wrapper">
     <div class="card" id="room_activity">
         <div class="card-header">
-            <h4>List Room</h4>
+            <h4></h4>
             <div class="card-header-action">
                 <a href="#" class="btn btn-primary" onclick="orderRoom();">
                 Add room activity
@@ -44,8 +44,8 @@
                                     ?>
                                 </td>
                                 <td class="align-middle">
-                                    <a href="#" class="btn btn-secondary" name="view" id="<?= $r['id']; ?>" onclick="actionRoom(this);">detail</a>
-                                    <a href="#" class="btn btn-info" name="edit" id="<?= $r['id']; ?>" onclick="actionRoom(this);">manage</a>
+                                    <a href="#" class="btn btn-secondary" name="view" id="<?= $r['event_id']; ?>" onclick="actionRoom(this);">detail</a>
+                                    <a href="#" class="btn btn-info" name="edit" id="<?= $r['event_id']; ?>" onclick="actionRoom(this);">edit</a>
                                 </td>
                             </tr>
                             <?php
@@ -60,6 +60,25 @@
 </div>
 
 <script type="text/javascript">
+
+async function actionRoom(e){
+    const params = {
+        id: $(e).attr('id'),
+        mode: $(e).attr('name')
+    }
+
+    const data = await api_ActivityRoomReservationTableGetRoom(params);
+    console.log("actionRoom -> data", data)
+    if(data){
+        const form = await new Components().room_reservation_form(data, params.mode);
+        $('#room_wrapper').empty().append(form);
+    }   
+    
+}
+
+function removeForm(){
+    $('a[name="activity-room_reservation-table"]').trigger('click');
+}
 
 function orderRoom(){
     $('a[name="activity-room_reservation-order"]').trigger('click');

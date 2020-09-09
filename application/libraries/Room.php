@@ -68,6 +68,13 @@ class Room {
         return $this->CI->MEvents->get_join($select_join, null, null, $order);
     }
 
+    public function activity_room_by_id($id){
+        $select_join = " r.id as id, r.name, r.location, e.id as event_id, e.date_start, e.date_end, e.title, e.type, e.note, e.participant, e.updated_date, e.updated_by FROM room as r 
+        inner join events as e on e.room_id=r.id ";
+        $where = " e.id=" . $id ." ";
+        return $this->CI->MEvents->get_join($select_join, $where, null, null)[0];
+    }
+
     public function get_room_summary(){
         $select_join = " r.id as id, r.name, r.location, count(e.id) as event_count from acis.room as r 
         left join acis.events as e on e.room_id = r.id ";
