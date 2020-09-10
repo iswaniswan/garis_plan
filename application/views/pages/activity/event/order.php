@@ -16,8 +16,11 @@
 <div class="row">
     <div class="col-8 mx-auto">
         <div class="card">
-            <div class="card-header d-none">
+            <div class="card-header">
                 <h4></h4>
+                <div class="card-header-action">
+                    <a class="btn btn-icon btn-info" href="#" onClick="removeForm();"><i class="fas fa-times"></i> Back </a>
+                </div>
             </div>
             <div class="card-body">
                 <form action="" methods="POST" class="needs-validation" novalidate="" onsubmit="event.preventDefault();">
@@ -122,11 +125,14 @@
 
 <script type="text/javascript">
 
+function removeForm(){
+    $('a[name="activity-event-table"]').trigger('click');
+}
+
 function totalDateLength(){
     let startDate = moment($('input[name="start"]').val(), "YYYY-MM-DD HH:mm:ss");
     let endDate = moment($('input[name="end"]').val(), "YYYY-MM-DD HH:mm:ss");
     let duration = moment.duration(endDate.diff(startDate));  
-    console.log("totalDateLength -> duration", duration)
     
     return duration;
 }

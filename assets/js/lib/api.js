@@ -1,8 +1,8 @@
 /**
  *  CONSTANT
  */
-// const SERVER_API = 'http://assetsmanagement.lan/';
-const SERVER_API = 'http://localhost:1381/';
+const SERVER_API = 'http://assetsmanagement.lan/';
+// const SERVER_API = 'http://localhost:1381/';
 // const SERVER_API = 'http://172.73.1.94/';
 
 async function api_Userprofile(){
@@ -51,6 +51,13 @@ async function api_FacilityById(id){
         .catch(error => console.log('error', error));    
     const data = await res.json();
     
+    return data;
+}
+
+async function api_room(){
+    const res = await fetch('Activity/room_get_data_id_name');
+    const data = await res.json();
+    console.log("functionapi_room -> data", data)
     return data;
 }
 
@@ -217,4 +224,106 @@ async function api_ActivityRoomReservationTableGetRoom(params){
         .then(result => { return result.json() })
         .catch(error => { console.log('error', error) })
     return res;
+}
+
+async function api_ActivityRoomReservationUpdate(params){
+    let arrUser = [];
+    params.participant.map(x=>{
+        return arrUser.push(parseInt(x));
+    });
+
+    let form = new FormData();
+    Object.entries(params).forEach(([key, value]) => {
+        if(key == 'participant' && value != null){
+            form.append(key, JSON.stringify(arrUser));
+        }else{
+            form.append(key, value);
+        }
+    });
+
+    let requestOptions = {
+        method: 'POST',
+        body: form
+    }    
+    
+    const res = await fetch(SERVER_API+"activity/room/reservation/update/submit", requestOptions)
+        .then(result => {return result})
+        .catch(error => console.log('error', error));    
+    const data = await res.json();
+        
+    return data;
+}
+
+async function api_ActivityRoomReservationUpdateDelete(id){
+    let form = new FormData();
+    form.append('id', id);
+
+    let requestOptions = {
+        method: 'POST',
+        body: form
+    }    
+    
+    const res = await fetch(SERVER_API+"activity/room/reservation/delete/submit", requestOptions)
+        .then(result => {return result})
+        .catch(error => console.log('error', error));    
+    const data = await res.json();
+        
+    return data;
+}
+
+async function api_ActivityEventTableGetEvent(params){
+    let form = new FormData();
+    form.append('id', params.id);
+
+    let requestOptions = { method: 'POST', body: form }
+
+    const res = await fetch('activity/event/table/get', requestOptions)
+        .then(result => { return result.json() })
+        .catch(error => { console.log('error', error) })
+    return res;
+}
+
+async function api_ActivityEventUpdate(params){
+    let arrUser = [];
+    params.participant.map(x=>{
+        return arrUser.push(parseInt(x));
+    });
+
+    let form = new FormData();
+    Object.entries(params).forEach(([key, value]) => {
+        if(key == 'participant' && value != null){
+            form.append(key, JSON.stringify(arrUser));
+        }else{
+            form.append(key, value);
+        }
+    });
+
+    let requestOptions = {
+        method: 'POST',
+        body: form
+    }    
+    
+    const res = await fetch(SERVER_API+"activity/event/update/submit", requestOptions)
+        .then(result => {return result})
+        .catch(error => console.log('error', error));    
+    const data = await res.json();
+        
+    return data;
+}
+
+async function api_ActivityEventUpdateDelete(id){
+    let form = new FormData();
+    form.append('id', id);
+
+    let requestOptions = {
+        method: 'POST',
+        body: form
+    }    
+    
+    const res = await fetch(SERVER_API+"activity/event/delete/submit", requestOptions)
+        .then(result => {return result})
+        .catch(error => console.log('error', error));    
+    const data = await res.json();
+        
+    return data;
 }

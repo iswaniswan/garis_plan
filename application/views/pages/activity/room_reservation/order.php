@@ -201,9 +201,13 @@ async function getUser(){
 }
 
 async function roomReservationOrderSubmit(e){
+    const time_start = $(e).find('input[name="time_start"]').val();
+    const time_end = $(e).find('input[name="time_end"]').val();
+    const date_start = $(e).find('input[name="start"]').val() + ' ' + time_start;
+    const date_end = $(e).find('input[name="start"]').val() + ' ' + time_end;
     let params = {
-        start: $(e).find('input[name="start"]').val() + ' 00:00:00',
-        end: $(e).find('input[name="start"]').val() + ' 00:00:00',
+        start: date_start ,
+        end: date_end,
         title: $(e).find('input[name="title"]').val(),
         type: 'group',
         note: $(e).find('textarea[name="description"]').val() || '',

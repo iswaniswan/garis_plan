@@ -13,8 +13,12 @@
                         <div class="card-header">
                             <h4 id=""><?= $r['name']; ?></h4>
                             <div class="card-header-action">
-                                <a href="#" class="btn btn-primary">
-                                    <?= $r['event_count']; ?>
+                                <?php 
+                                    $count = $r['event_count'];
+                                    $class = ((int) $count >=1 ? 'btn-primary' : 'btn-secondary');
+                                ?>
+                                <a href="#" class="btn <?= $class; ?>">
+                                    <?= $count; ?>
                                 </a>
                             </div>
                         </div>

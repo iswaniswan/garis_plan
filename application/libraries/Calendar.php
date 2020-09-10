@@ -61,6 +61,14 @@ class Calendar {
         }
     }
 
+    public function event_update($event){
+        return $this->CI->MEvents->update_event($event);
+    }
+
+    public function event_update_delete($id){
+        return $this->CI->MEvents->delete_event($id);
+    }
+
     public function eventPassive_insert_update($event){
         return $this->CI->MEventsPassive->insert_update_event_passive($event);
     }
@@ -76,6 +84,12 @@ class Calendar {
         return $this->CI->MEvents->get_join($select_join, $where, $group, $order);
     }
 
+    public function events_holiday(){
+        $where = " type='global' and is_deleted=0 ";
+        $order = " date_start ASC ";
+        return $this->CI->MEvents->get(null, $where, null, $order);
+    }
+
     public function event_table(){
         $user = $this->user->id;
         $select_join = " e.id, e.date_start, e.date_end, e.title, e.type, e.note, e.participant, e.room_id, e.branch, e.updated_by,
@@ -84,6 +98,23 @@ class Calendar {
         $where = " (e.type='group' or e.updated_by=" . $user ." or ep.is_join=1) AND is_deleted=0 ";
         $order = " e.updated_date desc ";
         return $this->CI->MEvents->get_join($select_join, $where, null, $order);
+    }
+
+    public function event_table_with_global(){
+        $user = $this->user->id;
+        $select_join = " e.id, e.date_start, e.date_end, e.title, e.type, e.note, e.participant, e.room_id, e.branch, e.updated_by,
+        ep.id as event_passive_id, ep.is_join, ep.is_cancel
+        FROM events as e left join events_passive as ep on e.id = ep.event_id ";
+        $where = " ((e.type='group' AND ep.is_join=1) or e.updated_by=" . $user . " or e.type='global' or e.type='branch') AND is_deleted=0 ";
+        $order = " e.updated_date desc ";
+        return $this->CI->MEvents->get_join($select_join, $where, null, $order);
+    }
+
+    public function event_table_get_by_id($id){
+        $select_join = " r.id as id, r.name, r.location, e.id as event_id, e.date_start, e.date_end, e.title, e.type, e.note, e.participant, e.updated_date, e.updated_by FROM room as r 
+        right join events as e on e.room_id=r.id ";
+        $where = " e.id=" . $id ." ";
+        return $this->CI->MEvents->get_join($select_join, $where, null, null)[0];
     }
 
     public function settings_holiday(){

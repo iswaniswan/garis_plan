@@ -34,10 +34,33 @@ Class MEvents extends MSql {
       $event['participant'] . "', '" . $event['room_id'] . "', '" . $event['branch'] . "', '" . $event['updated_by'] . "', " . $event['is_deleted'] . ") ";
 
     $query = $this->db->query($insert);
-    // var_dump($query);
-    // return parent::success_query();
     return (parent::success_query() ? $this->db->insert_id() : false);
     
+  }
+
+  public function update_event($event){
+    $update = "UPDATE " . $this->table . " SET " . $this->date_start . "='" . $event['date_start'] . "', " .
+      $this->date_end . "='" . $event['date_end'] . "', " .
+      $this->title . "='" . $event['title'] . "', " .
+      $this->type . "='" . $event['type'] . "', " .
+      $this->note . "='" . $event['note'] . "', " .
+      $this->participant . "='" . $event['participant'] . "', " .
+      $this->room_id . "=" . $event['room_id'] . ", " .
+      $this->branch . "='" . $event['branch'] . "', " .
+      $this->updated_by . "=" .$event['updated_by'] .
+      " WHERE id=" . $event['id'];
+
+    $query = $this->db->query($update);
+    return (parent::success_query() ? true : false);
+
+  }
+
+  public function delete_event($event){
+    $update = "UPDATE " . $this->table . " SET " . $this->is_deleted . "=1, " . $this->updated_by . "=" . $event['updated_by'] .
+      " WHERE id=" . $event['id'];
+
+    $query = $this->db->query($update);
+    return (parent::success_query() ? true : false);
   }
 
 }

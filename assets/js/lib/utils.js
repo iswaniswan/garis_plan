@@ -10,6 +10,11 @@ function dateTimeStrToDateStr(dateTimeStr){
     return moment(dateStr).format('YYYY-MM-DD');
 }
 
+function dateTimeStrToTimeStr(dateTimeStr){
+    let timeStr = moment(dateTimeStr).format('YYYY-MM-DD hh:mm');
+    return moment(timeStr).format('hh:mm');
+}
+
 function include(arr,obj) {
     return (arr.indexOf(obj) != -1);
 }

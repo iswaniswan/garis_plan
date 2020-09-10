@@ -2,6 +2,8 @@ class Components {
 
     // static properties
     BRANCH = ['bandung', 'jakarta', 'pasuruan', 'purwakarta'];
+    TYPE_EVENT = ['Private', 'Group', 'Branch', 'Global'];
+
 
     constructor(){
         this.compId = this.generateId()
@@ -10,6 +12,8 @@ class Components {
     generateId = function(){
         return Math.random().toString().substr(2, 5);
     }
+
+    // components dashboard calendar
 
     simpleTableHris = function (data){
         const table = `
@@ -148,7 +152,7 @@ class Components {
         return board;
     }
 
-    // components room
+    // components settings room
 
     formRoom = async function(data){
         const disabled = (data.mode === 'view' ? 'disabled' : '');
@@ -375,9 +379,7 @@ class Components {
         return form;
     }
 
-    // components room end
-
-    // components facility 
+    // components settings facility 
 
     formFacility = async function(data){
         const disabled = (data.mode === 'view' ? 'disabled' : '');
@@ -476,6 +478,8 @@ class Components {
         `;
         $(modal).modal('show');
     }
+
+    // components notification
 
     notification = function(data, show){
         console.log("Components -> notification -> data", data)
@@ -611,9 +615,40 @@ class Components {
         `;
         return form;
     }
+
+    // components activity room reservation
+
+    modalConfirmDeleteReservation = function(data){
+        const modal = `
+            <div class="modal fade" tabindex="-1" role="dialog" id="" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="card card-mt text-center">
+                            <div class="card-header" style="display:block;">
+                                <h4>Confirm DELETE</h4>
+                            </div>
+                            <div class="card-body">
+                                <form action="" methods="POST" onsubmit="event.preventDefault(); submitDeleteReservation(this);">
+                                    <input type="text" class="d-none" name="id" value="${data.id}">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        $(modal).modal('show');   
+    }
     
-    room_reservation_form = function(data, mode){
+    room_reservation_form = async function(data, mode){
         const disabled = (mode === 'view' ? 'disabled' : '');
+        const dateEvent = moment(data.date_start, 'YYYY-MM-DD HH:mm:ss').format('DD MMM YYYY');
+        const time_start = moment(data.date_start, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
+        const time_end = moment(data.date_end, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
+        const participant = JSON.parse(data.participant);
+
+        const dt_room = await api_room();
         const form = `
             <div class="row">
                 <div class="col-8 mx-auto">
@@ -625,15 +660,22 @@ class Components {
                             </div>
                         </div>
                         <div class="card-body">
-                            <form action="" methods="POST" class="needs-validation" novalidate="" onsubmit="event.preventDefault();">
-                                <div class="section-title mt-0 text-primary mb-5">Add</div>
+                            <form action="" methods="POST" class="needs-validation" novalidate="" onsubmit="event.preventDefault(); submitUpdateReservation(this);">
+                                <div class="section-title mt-0 text-primary mb-5">${mode.toUpperCase()}</div>
+                                <!-- event id -->
+                                <input type="text" name="id" value="${data.event_id}" class="d-none">
                                 <!-- room select -->
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-6">
                                             <label>choose room</label>
                                             <select class="form-control select2" id="select_room" name="name" required="" ${disabled}>
-                                                <option value="${data.id}" selected>${data.name}</option>
+                                                ${dt_room.map(r=>{
+                                                    let selected = (r === data.id ? 'selected' : '');
+                                                    return `
+                                                        <option value="${r.id}" ${selected}>${r.name}</option>
+                                                    `;
+                                                }).join('')}
                                             </select>
                                             <div class="invalid-feedback">no room selected</div>
                                         </div>
@@ -655,17 +697,17 @@ class Components {
                                     <div class="row">
                                         <div class="col-6">
                                             <label>Date</label>
-                                            <input type="text" class="form-control datetimepicker" name="start">
+                                            <input type="text" class="form-control datetimepicker" name="start" value="${dateEvent}" ${disabled}>
                                             <div class="invalid-feedback">title cannot be empty</div>
                                         </div>
                                         <div class="col-3">
                                             <label>Start time</label>
-                                            <input type="text" class="form-control timepicker" name="time_start" required="">
+                                            <input type="text" class="form-control timepicker" name="time_start" required="" value="${time_start}" ${disabled}>
                                             <div class="invalid-feedback">duration zero</div>
                                         </div>
                                         <div class="col-3">
                                             <label>End time</label>
-                                            <input type="text" class="form-control timepicker" name="time_end" required="">
+                                            <input type="text" class="form-control timepicker" name="time_end" required="" value="${time_end}" ${disabled}>
                                             <div class="invalid-feedback">duration zero</div>
                                         </div>
                                     </div>
@@ -674,7 +716,7 @@ class Components {
                                     <div class="row">
                                         <div class="col-12">
                                             <label>Event title</label>
-                                            <input type="text" class="form-control" name="title" required="">
+                                            <input type="text" class="form-control" name="title" required="" value="${data.title}" ${disabled}>
                                             <div class="invalid-feedback">title cannot be empty</div>
                                         </div>
                                     </div>
@@ -683,7 +725,7 @@ class Components {
                                     <div class="row">
                                         <div class="col-12">
                                             <label>Description</label>
-                                            <textarea name="description" rows="3" class="form-control" style="min-height:96px;" required=""></textarea>
+                                            <textarea name="description" rows="3" class="form-control" style="min-height:96px;" required="" ${disabled}>${data.note}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -691,11 +733,159 @@ class Components {
                                     <div class="row">
                                         <div class="col-12">
                                             <label>Add participant</label>
-                                            <select class="select2 form-control" name="participant" multiple="" required="" id="user-selection">
-                                                <option value="1">user 1</option>
+                                            <select class="select2 form-control" name="participant" multiple="" required="" id="user-selection" ${disabled}>
+                                                ${participant.map(p=>{
+                                                    return `<option name="${p}" value="${p}" selected>${p}</option>`;
+                                                }).join('')}
                                             </select>
                                             <div class="invalid-feedback">check user</div>
                                         </div>
+                                    </div>
+                                </div>
+                                <!-- submit -->
+                                <div class="form-group mt-5">
+                                    <button type="submit" class="btn btn-primary mb-2" name="submit" ${disabled}>submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        return form;
+    }
+
+    // components activity event
+
+    modalConfirmDeleteEvent = function(data){
+        const modal = `
+            <div class="modal fade" tabindex="-1" role="dialog" id="" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="card card-mt text-center">
+                            <div class="card-header" style="display:block;">
+                                <h4>Confirm DELETE</h4>
+                            </div>
+                            <div class="card-body">
+                                <form action="" methods="POST" onsubmit="event.preventDefault(); submitDeleteEvent(this);">
+                                    <input type="text" class="d-none" name="id" value="${data.id}">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        $(modal).modal('show');   
+    }
+
+    event_form = async function(data, mode){
+        console.log("Components -> data", data)
+        const room_id = (data.id != null || data.id != undefined ? true : false);
+        if(room_id){
+            return this.room_reservation_form(data, mode);
+        }
+        console.log('this was executed')
+
+        const disabled = (mode === 'view' ? 'disabled' : '');
+        const dateStart = moment(data.date_start, 'YYYY-MM-DD HH:mm:ss').format('DD MMM YYYY');
+        const dateEnd = moment(data.date_end, 'YYYY-MM-DD HH:mm:ss').format('DD MMM YYYY');
+        const participant = JSON.parse(data.participant);
+        const form = `
+            <div class="row">
+                <div class="col-8 mx-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4></h4>
+                            <div class="card-header-action">
+                                <a class="btn btn-icon btn-info" href="#" onClick="removeForm();"><i class="fas fa-times"></i> Back </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form action="" methods="POST" class="needs-validation" novalidate="" onsubmit="event.preventDefault(); submitUpdateEvent(this);">
+                                <div class="section-title mt-0 text-primary mb-5">${mode.toUpperCase()}</div>
+                                <!-- event id -->
+                                <input type="text" name="id" value="${data.event_id}" class="d-none">                                
+                                <!-- date time -->
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label>Date start</label>
+                                            <input type="text" class="form-control datetimepicker" name="start" value="${dateStart}" ${disabled}>
+                                            <div class="invalid-feedback">check date</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label>Date end</label>
+                                            <input type="text" class="form-control datetimepicker" name="end" value="${dateEnd}" ${disabled}>
+                                            <div class="invalid-feedback">check date</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- event title -->
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label>Title</label>
+                                            <input type="text" class="form-control" name="title" required="" value="${data.title}" ${disabled}>
+                                            <div class="invalid-feedback">title cannot be empty</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- description -->
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label>Description</label>
+                                            <textarea name="description" rows="3" class="form-control" style="min-height:96px;" required="" ${disabled}>${data.note}</textarea>
+                                            <div class="invalid-feedback">description cannot be empty</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- event type -->
+                                <div class="form-group mb-3">
+                                    <div class="control-label" style="color:unset">Type</div>
+                                        <div class="custom-switches-stacked mt-2" required="">
+                                            ${this.TYPE_EVENT.map(b=>{
+                                                let checked = (b.toLowerCase() == data.type ? 'checked' : '');
+                                                return `
+                                                    <label class="custom-switch">
+                                                        <input type="radio" name="option" value="${b}" class="custom-switch-input" ${checked} ${disabled}>
+                                                        <span class="custom-switch-indicator"></span>
+                                                        <span class="custom-switch-description">${b}<small>(Only you can see the event)</small></span>
+                                                    </label>
+                                                `;
+                                            }).join('')}
+                                        </div>
+                                        <div class="invalid-feedback">type cannot be empty</div>
+                                </div>
+                                <!-- participant -->
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-12 mb-3">
+                                            <label>Select branch</label>
+                                            <select class="select2 form-control" name="branch" required="" id="branch-selection" ${(data.type == 'branch' ? disabled: 'disabled')}>
+                                                <option value="" name=""></option>
+                                                ${this.BRANCH.map(b=>{
+                                                    let selected = (b.toLowerCase() === data.branch ? 'selected' : '');
+                                                    return `
+                                                        <option value="${b}" ${selected}>${b.toUpperCase()}</option>
+                                                    `;
+                                                }).join('')}
+                                            </select>
+                                            <div class="invalid-feedback">select branch</div>
+                                        </div>
+                                        
+                                        <div class="col-12">
+                                            <label>Add participant</label>
+                                            <select class="select2 form-control" name="participant" multiple="" required="" id="user-selection" ${(data.type == 'group' ? disabled: 'disabled')}>
+                                                ${participant.map(p=>{
+                                                    return `<option name="${p}" value="${p}" selected>${p}</option>`;
+                                                }).join('')}
+                                            </select>
+                                            <div class="invalid-feedback">check user</div>
+                                        </div>
+            
                                     </div>
                                 </div>
                                 <!-- submit -->
@@ -710,5 +900,9 @@ class Components {
         `;
         return form;
     }
+
+
+
+
 
 }

@@ -79,8 +79,88 @@ class Activity extends Home {
 		echo json_encode($response, true);
 	}
 
+	public function room_reservation_update_submit(){		
+		$response['data'] = [];
+		$response['error'] = 0;
+		$response['message'] = '';
+
+		$valid = true;
+
+		$event['id'] = (empty($_POST['id']) || $_POST['id'] == null ? $valid = false : $_POST['id'] );
+		$event['date_start'] = (empty($_POST['start']) || $_POST['start'] == null ? $valid = false : $_POST['start'] );
+		$event['date_end'] = (empty($_POST['end']) || $_POST['end'] == null ? $valid = false : $_POST['end'] );
+		$event['title'] = (empty($_POST['title']) || $_POST['title'] == null ? $valid = false : $_POST['title'] );
+		$event['type'] = (empty($_POST['type']) || $_POST['type'] == null ? $valid = false : $_POST['type'] );
+		$event['note'] = (empty($_POST['note']) || $_POST['note'] == null ? '' : $_POST['note'] );
+		$event['participant'] = (empty($_POST['participant']) || $_POST['participant'] == null ? '[]' : $_POST['participant'] );		
+		$event['room_id'] = (empty($_POST['room_id']) || $_POST['room_id'] == null ? '' : $_POST['room_id'] );
+		$event['branch'] = (empty($_POST['branch']) || $_POST['branch'] == null ? '' : $_POST['branch'] );
+
+		if($valid){
+			$event['updated_by'] = $this->user->id;
+			$this->event->setEvent($event);
+			$response['data'] = $this->calendar->event_update($this->event->getEvent());
+			$response['message'] = 'success';
+		}else{
+			$response['error'] = 1;
+		}
+
+		echo json_encode($response, true);
+	}
+
+	public function room_reservation_delete_submit(){		
+		$response['data'] = [];
+		$response['error'] = 0;
+		$response['message'] = '';
+
+		$valid = true;
+
+		$id = (empty($_POST['id']) || $_POST['id'] == null ? $valid = false : $_POST['id'] );
+
+		if($valid){
+			$event['id'] = $id;
+			$event['updated_by'] = $this->user->id;
+			$response['data'] = $this->calendar->event_update_delete($event);
+			$response['message'] = 'success';
+		}else{
+			$response['error'] = 1;
+		}
+
+		echo json_encode($response, true);
+	}
+
+	public function room_get_data_id_name(){
+		$q = $this->room->get_room_id_name();
+		$i=0;
+		foreach($q as $r){
+			foreach($r as $key=>$val){
+				$room[$i][$key] = $val;
+			}
+			$i++;
+		}
+		echo json_encode($room, true);
+	}
+
+	public function room_get_data(){
+		$q = $this->room->get_room();
+		$i=0;
+		foreach($q as $r){
+			foreach($r as $key=>$val){
+				if($key == 'facilities'){
+					$arrStr = $this->facility->get_facility_name_by_id($val);
+					$room[$i][$key] = join(', ', $arrStr);
+				}else{
+					$room[$i][$key] = $val;
+				}
+			}
+			$i++;
+		}
+		echo json_encode($room, true);
+	}
+
 	// event 
 	public function event_summary(){
+		$data['holiday'] = $this->calendar->events_holiday();
 		$data['event'] = $this->calendar->event_summary();
 		return $this->load->view('pages/activity/event/summary', $data);
 	}
@@ -93,6 +173,69 @@ class Activity extends Home {
 	public function event_table(){
 		$data['event'] = $this->calendar->event_table();
 		return $this->load->view('pages/activity/event/table', $data);
+	}
+
+	public function event_table_with_global(){
+		$data['event'] = $this->calendar->event_table_with_global();
+		return $this->load->view('pages/activity/event/table', $data);
+	}
+
+	public function event_table_get(){
+		$id = (empty($_POST['id']) || $_POST['id'] == null ? $valid = false : $_POST['id'] );
+		if($id){
+			$data = $this->calendar->event_table_get_by_id($id);
+			echo json_encode($data, true);
+		}
+	}
+
+	public function event_update_submit(){
+		$response['data'] = [];
+		$response['error'] = 0;
+		$response['message'] = '';
+
+		$valid = true;
+
+		$event['id'] = (empty($_POST['id']) || $_POST['id'] == null ? $valid = false : $_POST['id'] );
+		$event['date_start'] = (empty($_POST['start']) || $_POST['start'] == null ? $valid = false : $_POST['start'] );
+		$event['date_end'] = (empty($_POST['end']) || $_POST['end'] == null ? $valid = false : $_POST['end'] );
+		$event['title'] = (empty($_POST['title']) || $_POST['title'] == null ? $valid = false : $_POST['title'] );
+		$event['type'] = (empty($_POST['type']) || $_POST['type'] == null ? $valid = false : $_POST['type'] );
+		$event['note'] = (empty($_POST['note']) || $_POST['note'] == null ? '' : $_POST['note'] );
+		$event['participant'] = (empty($_POST['participant']) || $_POST['participant'] == null ? '[]' : $_POST['participant'] );		
+		$event['room_id'] = (empty($_POST['room_id']) || $_POST['room_id'] == null ? 0 : $_POST['room_id'] );
+		$event['branch'] = (empty($_POST['branch']) || $_POST['branch'] == null ? '' : $_POST['branch'] );
+
+		if($valid){
+			$event['updated_by'] = $this->user->id;
+			$this->event->setEvent($event);
+			$response['data'] = $this->calendar->event_update($this->event->getEvent());
+			$response['message'] = 'success';
+		}else{
+			$response['error'] = 1;
+		}
+
+		echo json_encode($response, true);
+	}
+
+	public function event_delete_submit(){
+		$response['data'] = [];
+		$response['error'] = 0;
+		$response['message'] = '';
+
+		$valid = true;
+
+		$id = (empty($_POST['id']) || $_POST['id'] == null ? $valid = false : $_POST['id'] );
+
+		if($valid){
+			$event['id'] = $id;
+			$event['updated_by'] = $this->user->id;
+			$response['data'] = $this->calendar->event_update_delete($event);
+			$response['message'] = 'success';
+		}else{
+			$response['error'] = 1;
+		}
+
+		echo json_encode($response, true);
 	}
 
 	// notification

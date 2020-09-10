@@ -141,7 +141,7 @@ function loadComponentScheduleBoard(data){
         return ( moment(d.end, 'YYYY-MM-DD') < moment.now() ? eventPrev.push(d) : eventNext.push(d) )
     });
     eventNext.sort((a, b) => (moment(a.start, 'YYYY-MM-DD') - moment(b.start, 'YYYY-MM-DD')) );
-
+    eventPrev.sort((a, b) => (moment(b.start, 'YYYY-MM-DD') - moment(a.start, 'YYYY-MM-DD')))
     const elPrev = new Components().scheduleBoardPrev(eventPrev.slice(0, 2));
     $('#schedule-prev').html(elPrev);
 
@@ -163,12 +163,16 @@ async function loadEvents(){
     dt_calendar.forEach(r => {
         let dtStartStr = dateTimeStrToDateStr(r.date_start);
         let dtEndStr = dateTimeStrToDateStr(r.date_end);
+        let tmStartStr = dateTimeStrToTimeStr(r.date_start);
+        let tmEndStr = dateTimeStrToTimeStr(r.date_end);
         let description = (r.note !== null ? r.note : r.title);
         let extendedProps = [];
         extendedProps.push({
             description: description,
             type: r.type,
-            participant: r.participant
+            participant: r.participant,
+            time_start: tmStartStr,
+            time_end: tmEndStr,
         });
         
         if(r.type === 'private'){
