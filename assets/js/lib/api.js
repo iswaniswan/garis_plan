@@ -1,8 +1,8 @@
 /**
  *  CONSTANT
  */
-const SERVER_API = 'http://assetsmanagement.lan/';
-// const SERVER_API = 'http://localhost:1381/';
+// const SERVER_API = 'http://assetsmanagement.lan/';
+const SERVER_API = 'http://localhost:1381/';
 // const SERVER_API = 'http://172.73.1.94/';
 
 async function api_Userprofile(){
@@ -55,7 +55,7 @@ async function api_FacilityById(id){
 }
 
 async function api_room(){
-    const res = await fetch('Activity/room_get_data_id_name');
+    const res = await fetch('activity/room_get_data_id_name');
     const data = await res.json();
     console.log("functionapi_room -> data", data)
     return data;
@@ -72,7 +72,7 @@ async function api_RoomByID(id){
     redirect: 'follow'
     };
 
-    const res = await fetch(SERVER_API+"/settings/room_view", requestOptions)
+    const res = await fetch(SERVER_API+"settings/room_view", requestOptions)
         .then(result => {return result})
         .catch(error => console.log('error', error));
     const data = await res.json();
@@ -155,7 +155,7 @@ async function api_roomReservationOrderSubmit(payload){
         body: form
     }    
     
-    const res = await fetch(SERVER_API+"Activity/room_reservation_order_submit", requestOptions)
+    const res = await fetch(SERVER_API+"activity/room_reservation_order_submit", requestOptions)
         .then(result => {return result})
         .catch(error => console.log('error', error));    
     const data = await res.json();

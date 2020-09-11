@@ -92,7 +92,8 @@ function renderCalendar(events){
         header: {
             left: 'prev,next today',
             center: 'title',
-            right: 'month,agendaWeek,agendaDay'
+            // right: 'month,agendaWeek,agendaDay'
+            right: 'month'
         },
         selectable: true,
         editable: false,
@@ -113,8 +114,38 @@ function renderCalendar(events){
         eventRenderWait: 300,
         eventClick: function(event){        
             showCalendarDateDetail(event);
+        },
+        dayClick: function(date, jsEvent, view){
+            if (FullCalendarActions.isDblClick()){
+                dblclick_callback(date);
+            }
         }
     });  
+}
+
+FullCalendarActions = {
+    currentTime: null, 
+    isDblClick : function() {
+        var prevTime = typeof FullCalendarActions.currentTime === null
+        ? new Date().getTime() - 1000000
+        : FullCalendarActions.currentTime;
+        FullCalendarActions.currentTime= new Date().getTime();
+        return FullCalendarActions.currentTime - prevTime < 500;
+    }
+}
+
+function dblclick_callback(date){
+    let dateStr = date.format();
+    const modal = new Components().modalDayClick(dateStr);    
+}
+
+function quickDayClick(el){
+    if($(el).attr('name') == 'room_reservation'){
+        $('a[name="activity-room_reservation-order"]').trigger('click');
+    }else{
+        $('a[name="activity-event-order"]').trigger('click');
+    }
+    $('.modal').modal('hide');
 }
 
 async function showCalendarDateDetail(event){
@@ -319,6 +350,11 @@ async function loadEvents(){
             extEvent.push(nEvent);
         }
         return extEvent; 
+    }
+
+    $.fn.dateClick = function(){
+        let dataDate = $(this).attr('data-date');
+        console.log(dataDate);
     }
 
 }(jQuery));
