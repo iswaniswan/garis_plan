@@ -1,7 +1,8 @@
-/**
- * Class Event
- */
-class Event {
+import { TYPE_EVENT, BRANCH } from '../settings.js'
+import { Api } from '../modules/api.js';
+
+
+export default class Event {
 
     constructor(title, start, end, description, extendedProps){
         this.title = title;
@@ -13,7 +14,7 @@ class Event {
 }
 
 // event yang berlaku nasional, type global
-class Holiday extends Event {
+export class Holiday extends Event {
 
     primaryColor = '#fc544b';
     secondaryColor = '#fafafa';
@@ -30,7 +31,7 @@ class Holiday extends Event {
 }
 
 // event yang berlaku untuk seluruh karyawan, type branch
-class Cuti extends Event {
+export class Cuti extends Event {
 
     primaryColor = '#e83e8c';
     secondaryColor = '#fafafa';
@@ -47,7 +48,7 @@ class Cuti extends Event {
 }
 
 // event yang berlaku untuk group, type group
-class Meeting extends Event {
+export class Meeting extends Event {
 
     primaryColor = '#47c363';
     secondaryColor = '#fafafa';
@@ -64,7 +65,7 @@ class Meeting extends Event {
 }
 
 // event yang berlaku untuk pribadi, type private
-class Izin extends Event {
+export class Izin extends Event {
 
     primaryColor = '#3abaf4';
     secondaryColor = '#fafafa';
@@ -81,7 +82,7 @@ class Izin extends Event {
 }
 
 // info data izin hris
-class Hris extends Event {
+export class Hris extends Event {
 
     primaryColor = '#ffa426';
     secondaryColor = '#fafafa';
@@ -95,4 +96,9 @@ class Hris extends Event {
         this.textColor = textColor || this.secondaryColor;
     }
     
+}
+
+// custom function
+export function clickMe(params){
+    console.log('Click Me', params);
 }

@@ -1,9 +1,12 @@
 /**
  *  CONSTANT
  */
-// const SERVER_API = 'http://assetsmanagement.lan/';
-const SERVER_API = 'http://localhost:1381/';
+const SERVER_API = 'http://assetsmanagement.lan/';
+
+// const SERVER_API = 'http://localhost:1381/';
 // const SERVER_API = 'http://172.73.1.94/';
+const COMPONENTS_PATH = `${SERVER_API}assets/js/components/`;
+
 
 async function api_Userprofile(){
     const res = await fetch(SERVER_API + 'assets/json/hris_profile.json');
@@ -19,7 +22,7 @@ async function api_DataHris(){
 }
 
 async function api_UserHris(){
-    const res = await fetch(SERVER_API + 'assets/json/hris_user.json');
+    const res = await fetch(SERVER_API + 'assets/json/hris_user2.json');
     // const res = await fetch(SERVER_API + 'rest/rest-user.php/data');
     const data = await res.json();
     return data;

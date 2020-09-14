@@ -1,4 +1,3 @@
-
   <!-- General JS Scripts -->
   <script src="<?= base_url('assets/vendor/jquery/jquery-3.3.1.min.js'); ?>"></script>
   <script src="<?= base_url('assets/vendor/popper/popper.min.js'); ?>"></script>
@@ -31,5 +30,6 @@
   <script src="<?= base_url('assets/js/scripts.js'); ?>"></script>
 
   <!-- Page Specific JS File -->
+  
 </body>
 </html>

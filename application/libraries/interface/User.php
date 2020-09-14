@@ -3,10 +3,10 @@
 class User {
 
     // static user, for development only
-    // public $id = '201137';
-    // public $name = 'iswanto';
-    public $name = 'rizky';
-    public $id = '170967';
+    public $id = '201137';
+    public $name = 'iswanto';
+    // public $name = 'rizky';
+    // public $id = '170967';
 
     public $department = 'IT';
     public $position = 'IT Staff';

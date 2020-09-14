@@ -53,7 +53,7 @@
                                                 >
                                                 <?= $room[$i]['name']; ?>
                                             </option>
-                                            <?php var_dump($room[$i]['facilities']);
+                                            <?php
                                         }
                                     ?>
                                 </select>

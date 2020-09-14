@@ -755,6 +755,115 @@ class Components {
         return form;
     }
 
+    room_reservation_form_quick = async function(dateStr){
+        const dt_user = await api_UserHris();
+        console.log("Components -> dt_user", dt_user)
+        const dt_room = await api_room();
+        const form = `
+            <div class="row">
+                <div class="col-12 mx-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4> </h4>
+                            <div class="card-header-action">
+                                <a class="btn btn-icon btn-info" href="#" onClick="removeForm();"><i class="fas fa-times"></i> Back </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form action="" methods="POST" class="needs-validation" novalidate="" onsubmit="event.preventDefault(); submitUpdateReservation(this);">
+                                <div class="section-title mt-0 text-primary mb-5">Add</div>
+                                <!-- event id -->
+                                <input type="text" name="id" value="" class="d-none">
+                                <!-- room select -->
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label>choose room</label>
+                                            <select class="form-control select2" id="select_room" name="name" required="" >
+                                                ${dt_room.map(r=>{
+                                                    return `
+                                                        <option value="${r.id}" >${r.name}</option>
+                                                    `;
+                                                }).join('')}
+                                            </select>
+                                            <div class="invalid-feedback">no room selected</div>
+                                        </div>
+            
+                                        <div class="col-6">
+                                            <div class="card card-primary" id="room_info" style="display:none;">
+                                                <div class="card-header">
+                                                    <h4>Room info</h4>
+                                                    <div class="card-header-action">
+                                                        <a class="btn btn-icon btn-danger" href="#" onClick="hideCard()"><i class="fas fa-times"></i></a>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label>Date</label>
+                                            <input type="text" class="form-control datetimepicker" name="start" value="${dateStr}">
+                                            <div class="invalid-feedback">title cannot be empty</div>
+                                        </div>
+                                        <div class="col-3">
+                                            <label>Start time</label>
+                                            <input type="text" class="form-control timepicker" name="time_start" required="" value="" >
+                                            <div class="invalid-feedback">duration zero</div>
+                                        </div>
+                                        <div class="col-3">
+                                            <label>End time</label>
+                                            <input type="text" class="form-control timepicker" name="time_end" required="" value="" >
+                                            <div class="invalid-feedback">duration zero</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label>Event title</label>
+                                            <input type="text" class="form-control" name="title" required="" value="">
+                                            <div class="invalid-feedback">title cannot be empty</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label>Description</label>
+                                            <textarea name="description" rows="3" class="form-control" style="min-height:96px;" required=""></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label>Add participant</label>
+                                            <select class="select2 form-control" name="participant" multiple="" required="" id="user-selection" >
+                                                ${dt_user.data.map(p=>{
+                                                    return `<option name="${p}" value="${p}" selected>${p}</option>`;
+                                                }).join('')}
+                                            </select>
+                                            <div class="invalid-feedback">check user</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- submit -->
+                                <div class="form-group mt-5">
+                                    <button type="submit" class="btn btn-primary mb-2" name="submit" >submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        return form;
+    }
+
     // components activity event
 
     modalConfirmDeleteEvent = function(data){
@@ -909,7 +1018,7 @@ class Components {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="">
-                                Quick event on <strong>${dateFormat}</strong>
+                                Add event on <strong>${dateFormat}</strong>
                             </h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
@@ -917,10 +1026,10 @@ class Components {
                         </div>
                         <div class="modal-body my-4" id="">
                             <div class="row justify-content-center">
-                                <button type="button" class="btn btn-primary mx-1" name="room_reservation" onclick="quickDayClick(this);">
+                                <button type="button" class="btn btn-primary mx-1" name="room_reservation" data-date="${date}">
                                     Room reservation
                                 </button>
-                                <button type="button" class="btn btn-success mx-1" name="event" onclick="quickDayClick(this);">
+                                <button type="button" class="btn btn-success mx-1" name="event" data-date="${date}">
                                     Event
                                 </button>
                             </div>
@@ -929,11 +1038,11 @@ class Components {
                 </div>
             </div>
         `;
-        $(modal).modal('show').on('hidden.bs.modal', function(){
-            $(this).remove();
-        });
+        return modal;
     }
 
+    // test components
+    
 
 
 }
