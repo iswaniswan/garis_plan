@@ -95,7 +95,17 @@ class Calendar {
         $select_join = " e.id, e.date_start, e.date_end, e.title, e.type, e.note, e.participant, e.room_id, e.branch, e.updated_by,
         ep.id as event_passive_id, ep.is_join, ep.is_cancel
         FROM events as e left join events_passive as ep on e.id = ep.event_id ";
-        $where = " (e.type='group' or e.updated_by=" . $user ." or ep.is_join=1) AND is_deleted=0 ";
+        $where = " (e.type='group' or e.updated_by=" . $user ." or ep.is_join=1) AND is_deleted=0 AND (e.date_end >= NOW()) ";
+        $order = " e.updated_date desc ";
+        return $this->CI->MEvents->get_join($select_join, $where, null, $order);
+    }
+
+    public function event_table_past(){
+        $user = $this->user->id;
+        $select_join = " e.id, e.date_start, e.date_end, e.title, e.type, e.note, e.participant, e.room_id, e.branch, e.updated_by,
+        ep.id as event_passive_id, ep.is_join, ep.is_cancel
+        FROM events as e left join events_passive as ep on e.id = ep.event_id ";
+        $where = " (e.type='group' or e.updated_by=" . $user ." or ep.is_join=1) AND is_deleted=0 AND (e.date_end < NOW())";
         $order = " e.updated_date desc ";
         return $this->CI->MEvents->get_join($select_join, $where, null, $order);
     }

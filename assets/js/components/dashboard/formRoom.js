@@ -250,4 +250,7 @@ async function roomReservationOrderSubmit(e){
         : `<div class="container text-center"><h5 class="text-danger">Error occured, please reload page</h5></div>`
     );
     $('form').empty().append(msg);
+    setTimeout(()=>{
+        location.reload();
+    }, 2000);
 }

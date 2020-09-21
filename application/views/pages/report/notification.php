@@ -6,16 +6,22 @@
 </style>
 <!--  -->
 <div class="section-header" id="section-notification">
-    <h1 class="">Notification</h1>
+    <h1 class="">Report</h1>
 </div>
 
 <div id="notification_wrapper">
     <div class="card" id="notification_content">
         <div class="card-header">
-            <h4 id="">Notification list
+            <h4 id="">Notification
                 <span class="badge badge-info ml-3"><?= (isset(($notification)) ? count($notification) : 0 ); ?></span>
             </h4>
             <div class="card-header-action">
+                <a href="#" class="btn btn-success" onclick="print();">
+                    <span class="fas fa-print" style="margin:unset;"></span>
+                </a>
+                <a href="#" class="btn btn-success" onclick="download();">
+                    <span class="fas fa-download" style="margin:unset;"></span>
+                </a>
             </div>
         </div>
         <div class="card-body">

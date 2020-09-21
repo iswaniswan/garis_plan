@@ -1,5 +1,5 @@
 <div class="section-header">
-    <h1 class="">Activity</h1>
+    <h1 class="">Report</h1>
 </div>
 <div id="event_wrapper">
     <div class="row">
@@ -10,8 +10,11 @@
                         <span class="badge badge-info ml-3"><?= count($event); ?></span>
                     </h4>
                     <div class="card-header-action">
-                        <a href="#" class="btn btn-primary" onclick="orderEvent();">
-                        Add new event
+                        <a href="#" class="btn btn-success" onclick="print();">
+                            <span class="fas fa-print" style="margin:unset;"></span>
+                        </a>
+                        <a href="#" class="btn btn-success" onclick="download();">
+                            <span class="fas fa-download" style="margin:unset;"></span>
                         </a>
                     </div>
                 </div>
@@ -51,23 +54,13 @@
                                         <td class="align-middle">
                                             <?php 
                                                 $badge = ( $r['type'] == 'global' ? 'badge-danger' : ($r['type'] == 'private' ? 'badge-info' : ($r['type'] == 'group' ? 'badge-success' : 'badge-warning' )) );
-                                                $room = ( $r['room_id'] > 0 ? 'badge-primary' : '' );    
-                                            ?>
+                                                ?>
                                                 <span class="badge <?= $badge; ?>"><?= $r['type']; ?></span>
-                                            <?php 
-                                                if($room) { ?> <span class="badge <?= $room ?>">room</span> <?php }
+                                                <?php
                                             ?>
                                         </td>
                                         <td class="align-middle">
                                             <a href="#" class="btn btn-secondary" name="view" id="<?= $r['id']; ?>" onclick="actionEvent(this);">view</a>
-                                            <?php
-                                                if($r['type'] != 'global') {
-                                                    ?>
-                                                        <a href="#" class="btn btn-info" name="edit" id="<?= $r['id']; ?>" onclick="actionEvent(this);">edit</a>
-                                                        <a href="#" class="btn btn-danger" name="delete" id="<?= $r['id']; ?>" onclick="actionEvent(this);">delete</a>
-                                                    <?php
-                                                }
-                                            ?>
                                         </td>
                                     </tr>
                                     <?php

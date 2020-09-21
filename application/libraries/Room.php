@@ -77,7 +77,15 @@ class Room {
     public function activity_room(){
         $select_join = " r.id as id, r.name, r.location, e.id as event_id, e.date_start, e.date_end, e.title, e.type, e.note, e.participant, e.updated_date, e.updated_by FROM room as r 
         inner join events as e on e.room_id=r.id ";
-        $where = " e.is_deleted=0 ";
+        $where = " e.is_deleted=0 AND (e.date_end >= NOW()) ";
+        $order = " e.date_end DESC";
+        return $this->CI->MEvents->get_join($select_join, $where, null, $order);
+    }
+
+    public function activity_room_past(){
+        $select_join = " r.id as id, r.name, r.location, e.id as event_id, e.date_start, e.date_end, e.title, e.type, e.note, e.participant, e.updated_date, e.updated_by FROM room as r 
+        inner join events as e on e.room_id=r.id ";
+        $where = " e.is_deleted=0 AND (e.date_end < NOW()) ";
         $order = " e.date_end DESC";
         return $this->CI->MEvents->get_join($select_join, $where, null, $order);
     }

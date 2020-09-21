@@ -12,8 +12,10 @@ class Report extends Home {
 
 	// room reservation
 
-	public function room_reservation_list(){
-		$this->under_construction();
+	public function room_reservation(){
+		$data['room'] = $this->room->activity_room_past();
+		$data['t'] = $this->load->view('pages/report/room_reservation/table', $data);
+		return $data;
 	}
 
 	public function room_reservation_order(){
@@ -22,14 +24,16 @@ class Report extends Home {
 
 	// event 
 
-	public function event_daily(){
-		$this->under_construction();
+	public function event(){
+		$data['event'] = $this->calendar->event_table_past();
+		return $this->load->view('pages/report/event/table', $data);
 	}
 
 	// notification
 
 	public function notification(){		
-		$this->under_construction();
+		$data['notification'] = $this->notification->get_all_past_notification_by_user();
+		$this->load->view('pages/report/notification', $data);
 	}
 
 }

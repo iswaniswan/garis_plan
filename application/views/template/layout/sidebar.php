@@ -44,17 +44,17 @@
 
             <li class="menu-header">Report</li>
             <li>
-                <a class="nav-link" name="report-room_reservation" href="#">
+                <a class="nav-link" name="report-room_reservation" href="<?= base_url('report/room/reservation'); ?>">
                     <i class="fas fa-clipboard"></i><span>Room reservation</span>
                 </a>
             </li>
             <li>
-                <a class="nav-link" name="report-room_reservation" href="#">
+                <a class="nav-link" name="report-event" href="<?= base_url('report/event') ?>">
                     <i class="fas fa-clipboard"></i><span>Event</span>
                 </a>
             </li>
             <li>
-                <a class="nav-link" name="report-room_reservation" href="#">
+                <a class="nav-link" name="report-notification" href="<?= base_url('report/notification'); ?>">
                     <i class="fas fa-clipboard"></i><span>Notification</span>
                 </a>
             </li> 
@@ -68,8 +68,8 @@
                     <li><a class="nav-link d-none" name="settings-data-holiday-order" href="<?= base_url('settings/data/holiday/order'); ?>">order holiday</a></li>
                     <li><a class="nav-link" name="settings-data-room" href="<?= base_url('settings/data/room'); ?>">Room</a></li>
                     <li><a class="nav-link" name="settings-data-facilities" href="<?= base_url('settings/data/facilities'); ?>">Facilities</a></li>
-                    <li><a class="nav-link" name="" href="<?= base_url('settings/data/vehicle'); ?>">Vehicle</a></li>
-                    <li><a class="nav-link" name="" href="<?= base_url('settings/data/user'); ?>">User</a></li>
+                    <!-- <li><a class="nav-link" name="" href="<?= base_url('settings/data/vehicle'); ?>">Vehicle</a></li> -->
+                    <!-- <li><a class="nav-link" name="" href="<?= base_url('settings/data/user'); ?>">User</a></li> -->
                 </ul>
             </li>
         </ul>

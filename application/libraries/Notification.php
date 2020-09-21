@@ -27,7 +27,35 @@ class Notification {
     }
 
     public function get_all_notification_by_user(){
-        $where = '( user_id=' . $this->user->id . ') ';
+        $where = '( user_id=' . $this->user->id . ') AND updated_date >= NOW()';
+        $order = ' updated_date DESC ';
+        $query = $this->CI->MNotification->get(null, $where, null, $order);
+
+        $notif = null;
+        $i=0;
+		foreach($query as $q){        
+			foreach($q as $key=>$val){
+				$key == 'id' ? $notif[$i]['id'] = $val : '';
+				$key == 'event_id' ? $notif[$i]['event_id'] = $val : '';
+				$key == 'is_read' ? $notif[$i]['is_read'] = $val : '';
+				$key == 'updated_date' ? $notif[$i]['updated_date'] = $val : '';
+				$key == 'title' ? $notif[$i]['title'] = $val : '';
+				$key == 'message' ? $notif[$i]['message'] = $val : '';
+                // unfinished, sebaiknya paka nama bukan user id
+                // if($key == 'user_id'){
+				// 	$notif[$i]['sender'] = 
+                // }
+                $key == 'user_id' ? $notif[$i]['user_id'] = $val : '';
+            }
+            $i++;
+        }
+        // echo json_encode($notif);
+        $result = ($notif != null ? $notif : null);
+        return $result;
+    }
+
+    public function get_all_past_notification_by_user(){
+        $where = '( user_id=' . $this->user->id . ') AND updated_date < NOW() ';
         $order = ' updated_date DESC ';
         $query = $this->CI->MNotification->get(null, $where, null, $order);
 
