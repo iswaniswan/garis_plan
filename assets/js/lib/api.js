@@ -1,9 +1,9 @@
 /**
  *  CONSTANT
  */
-const SERVER_API = 'http://assetsmanagement.lan/';
+// const SERVER_API = 'http://assetsmanagement.lan/';
 
-// const SERVER_API = 'http://localhost:1381/';
+const SERVER_API = 'http://localhost:1381/';
 // const SERVER_API = 'http://172.73.1.94/';
 const COMPONENTS_PATH = `${SERVER_API}assets/js/components/`;
 

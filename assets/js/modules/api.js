@@ -12,7 +12,7 @@ export class Api {
     }
 
     async userHris(){    
-        const res = await fetch('assets/json/hris_user2.json');
+        const res = await fetch(`/assets/json/hris_user2.json`);
         return res.json();
     }
 

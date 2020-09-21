@@ -1,5 +1,5 @@
 <div class="section-header">
-    <h1 class="">Summary</h1>
+    <h1 class="">Activity</h1>
 </div>
 <div class="row">
     <div class="col-12 mx-auto">

@@ -1,12 +1,14 @@
 <div class="section-header">
-    <h1 class="">Event</h1>
+    <h1 class="">Activity</h1>
 </div>
 <div id="event_wrapper">
     <div class="row">
         <div class="col-12 mx-auto">
             <div class="card">
                 <div class="card-header">
-                    <h4>Event</h4>
+                    <h4>Event
+                        <span class="badge badge-info ml-3"><?= count($event); ?></span>
+                    </h4>
                     <div class="card-header-action">
                         <a href="#" class="btn btn-primary" onclick="orderEvent();">
                         Add new event

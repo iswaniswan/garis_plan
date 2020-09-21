@@ -1,10 +1,12 @@
 <div class="section-header">
-    <h1 class="">Table</h1>
+    <h1 class="">Activity</h1>
 </div>
 <div id="room_wrapper">
     <div class="card" id="room_activity">
         <div class="card-header">
-            <h4></h4>
+            <h4>Room reservation
+                <span class="badge badge-info ml-3"><?= count($room); ?></span>
+            </h4>
             <div class="card-header-action">
                 <a href="#" class="btn btn-primary" onclick="orderRoom();">
                 Add room activity
