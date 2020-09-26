@@ -1,16 +1,30 @@
+<style>
+.printable {
+    display: none;
+}
+.printable-no: {
+    display: block;
+}
+@media print {
+    .printable {
+        display: block;
+    }
+    .printable-no {
+        display: none;
+    }
+}
+</style>
 <div class="section-header">
     <h1 class="">Report</h1>
 </div>
-<div id="event_wrapper">
-    <div class="row">
-        <div class="col-12 mx-auto">
-            <div class="card">
+<div id="event_wrapper" class="printable-no">
+            <div class="card" id="event_report">
                 <div class="card-header">
                     <h4>Event
                         <span class="badge badge-info ml-3"><?= count($event); ?></span>
                     </h4>
                     <div class="card-header-action">
-                        <a href="#" class="btn btn-success" onclick="print();">
+                        <a href="#" class="btn btn-success" onclick="printMe('#event_report');">
                             <span class="fas fa-print" style="margin:unset;"></span>
                         </a>
                         <a href="#" class="btn btn-success" onclick="download();">
@@ -72,9 +86,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 </div>
+<div class="printable"></div>
 
 <script type="text/javascript">
 
@@ -171,6 +184,13 @@ async function submitUpdateReservation(e){
 
 function orderEvent(){
     $('a[name="activity-event-order"]').trigger('click');
+}
+
+function printMe(el){
+    const src = $(el);
+    const box = $('.printable').empty();
+    src.clone().appendTo(box);
+    print();
 }
 
 $(document).ready(function(){

@@ -217,17 +217,17 @@ async function api_PassiveEventInsertUpdate(params){
     return res;
 }
 
-async function api_ActivityRoomReservationTableGetRoom(params){
-    let form = new FormData();
-    form.append('id', params.id);
+// async function api_ActivityRoomReservationTableGetRoom(params){
+//     let form = new FormData();
+//     form.append('id', params.id);
 
-    let requestOptions = { method: 'POST', body: form }
+//     let requestOptions = { method: 'POST', body: form }
 
-    const res = await fetch('activity/room/reservation/table/get', requestOptions)
-        .then(result => { return result.json() })
-        .catch(error => { console.log('error', error) })
-    return res;
-}
+//     const res = await fetch('activity/room/reservation/table/get', requestOptions)
+//         .then(result => { return result.json() })
+//         .catch(error => { console.log('error', error) })
+//     return res;
+// }
 
 async function api_ActivityRoomReservationUpdate(params){
     let arrUser = [];
@@ -274,17 +274,17 @@ async function api_ActivityRoomReservationUpdateDelete(id){
     return data;
 }
 
-async function api_ActivityEventTableGetEvent(params){
-    let form = new FormData();
-    form.append('id', params.id);
+// async function api_ActivityEventTableGetEvent(params){
+//     let form = new FormData();
+//     form.append('id', params.id);
 
-    let requestOptions = { method: 'POST', body: form }
+//     let requestOptions = { method: 'POST', body: form }
 
-    const res = await fetch('activity/event/table/get', requestOptions)
-        .then(result => { return result.json() })
-        .catch(error => { console.log('error', error) })
-    return res;
-}
+//     const res = await fetch('activity/event/table/get', requestOptions)
+//         .then(result => { return result.json() })
+//         .catch(error => { console.log('error', error) })
+//     return res;
+// }
 
 async function api_ActivityEventUpdate(params){
     let arrUser = [];

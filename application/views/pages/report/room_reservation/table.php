@@ -1,14 +1,30 @@
+<style>
+.printable {
+    display: none;
+}
+.printable-no: {
+    display: block;
+}
+@media print {
+    .printable {
+        display: block;
+    }
+    .printable-no {
+        display: none;
+    }
+}
+</style>
 <div class="section-header">
     <h1 class="">Report</h1>
 </div>
 <div id="room_wrapper">
-    <div class="card" id="room_activity">
+    <div class="card" id="room_report">
         <div class="card-header">
             <h4>Room reservation
                 <span class="badge badge-info ml-3"><?= count($room); ?></span>
             </h4>
             <div class="card-header-action">
-                <a href="#" class="btn btn-success" onclick="print();">
+                <a href="#" class="btn btn-success" onclick="printMe('room_report');">
                     <span class="fas fa-print" style="margin:unset;"></span>
                 </a>
                 <a href="#" class="btn btn-success" onclick="download();">
@@ -62,6 +78,7 @@
         </div>
     </div>
 </div>
+<div class="printable"></div>
 
 <script type="text/javascript">
 
@@ -126,6 +143,13 @@ function removeForm(){
 
 function orderRoom(){
     $('a[name="activity-room_reservation-order"]').trigger('click');
+}
+
+function printMe(el){
+    const src = $(el);
+    const box = $('.printable').empty();
+    src.clone().appendTo(box);
+    print();
 }
 
 $(document).ready(function(){

@@ -43,4 +43,29 @@ export class Api {
             
         return data;
     }
+
+    async activityRoomReservationTableGetRoom(params){
+        let form = new FormData();
+        form.append('id', params.id);
+    
+        let requestOptions = { method: 'POST', body: form }
+    
+        const res = await fetch('activity/room/reservation/table/get', requestOptions)
+            .then(result => { return result.json() })
+            .catch(error => { console.log('error', error) })
+        return res;
+    }
+
+    async activityEventTableGetEvent(params){
+        let form = new FormData();
+        form.append('id', params.id);
+    
+        let requestOptions = { method: 'POST', body: form }
+    
+        const res = await fetch('activity/event/table/get', requestOptions)
+            .then(result => { return result.json() })
+            .catch(error => { console.log('error', error) })
+        return res;
+    }
+
 }

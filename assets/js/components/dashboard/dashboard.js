@@ -123,6 +123,30 @@ function loadComponentScheduleBoard(data){
 
     const elNext = new Components().scheduleBoardNext(eventNext.slice(0, 2));
     $('#schedule-next').html(elNext);
+
+    setTimeout(()=>{
+        checkDoubleEvents(eventNext);
+    }, 500);
+}
+
+function checkDoubleEvents(events_param){
+    let devents = events_param;
+    let duplicates = [];
+
+    devents.map((v, i, self) => {
+        let idx = self.findIndex((t) => (t.start == v.start))
+        if(idx != i){
+            duplicates.push({
+                date: v.start
+            })
+        }
+    })
+
+    if(duplicates.length >= 1){
+        const template = `<div class="d-flex row"><div class="col-12 text-center text-danger">
+            <div class="alert alert-danger">You have clashed event on ${moment(duplicates[0].date, 'YYYY-MM-DD').format('D MMM YYYY')} !</div></div></div>`;
+        $('#duplicate-alert').empty().append(template)
+    }
 }
 
 async function loadEvents(){
@@ -235,12 +259,10 @@ async function loadEvents(){
             eventsIndex.push(ev.start);
         }
     });
-    // let eventsAll = [].concat.apply([], [array1, array2, ...]);
-    let events_combined = [].concat.apply([], [companyEvents, holidayEvents, privateEvents, groupEvents, hrisEventCombined]);
     
+    let events_combined = [].concat.apply([], [companyEvents, holidayEvents, privateEvents, groupEvents, hrisEventCombined]);
     renderCalendar(events_combined);
 };
-
 
 (function($){
 

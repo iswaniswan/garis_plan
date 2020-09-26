@@ -16,7 +16,7 @@
                 <span class="badge badge-info ml-3"><?= (isset(($notification)) ? count($notification) : 0 ); ?></span>
             </h4>
             <div class="card-header-action">
-                <a href="#" class="btn btn-success" onclick="print();">
+                <a href="#" class="btn btn-success" onclick="printMe('#notification_content');">
                     <span class="fas fa-print" style="margin:unset;"></span>
                 </a>
                 <a href="#" class="btn btn-success" onclick="download();">
@@ -77,6 +77,7 @@
         </div>
     </div>
 </div>
+<div class="printable"></div>
 
 <script type="text/javascript">
 async function actionNotification(e){
@@ -85,7 +86,6 @@ async function actionNotification(e){
     let form = await new Components().notification_form(id);
 
     if(is_read == 0){
-        // set notif has read
         api_NotificationHasRead(id);
     }
 
@@ -95,7 +95,12 @@ async function actionNotification(e){
     $(form).toggleButton();
 }
 
-
+function printMe(el){
+    const src = $(el);
+    const box = $('.printable').empty();
+    src.clone().appendTo(box);
+    print();
+}
 
 $(document).ready(function(){
     $('#tabledt').dataTable();

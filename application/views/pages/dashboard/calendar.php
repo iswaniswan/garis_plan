@@ -2,6 +2,9 @@
     <h1 class="">Dashboard</h1>
     <div id="FormRoom"></div>
 </div>
+
+<div class="" id="duplicate-alert"></div>
+
 <div class="row" id="calendar-box">
     <div class="col-md-8 col-sm-12">
         <div class="card">

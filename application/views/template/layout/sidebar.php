@@ -1,4 +1,4 @@
-<div class="main-sidebar">
+<div class="main-sidebar printable-no">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
             <a href="#" onClick="location.reload();">GARIS</a>
@@ -20,7 +20,6 @@
                     <i class="fas fa-pen-square"></i><span>Room reservation</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <!-- <li><a class="nav-link" name="activity-event-room" href="layout-default.html">Dashboard</a></li> -->
                     <li><a class="nav-link" name="activity-room_reservation-summary" href="<?= base_url('activity/room/reservation/summary'); ?>">summary</a></li>
                     <li><a class="nav-link d-none" name="activity-room_reservation-order" href="<?= base_url('activity/room/reservation/order'); ?>">order</a></li>
                     <li><a class="nav-link" name="activity-room_reservation-table" href="<?= base_url('activity/room/reservation/table'); ?>">table</a></li>
@@ -67,9 +66,7 @@
                     <li><a class="nav-link" name="settings-data-holiday" href="<?= base_url('settings/data/holiday'); ?>">Holiday</a></li>
                     <li><a class="nav-link d-none" name="settings-data-holiday-order" href="<?= base_url('settings/data/holiday/order'); ?>">order holiday</a></li>
                     <li><a class="nav-link" name="settings-data-room" href="<?= base_url('settings/data/room'); ?>">Room</a></li>
-                    <li><a class="nav-link" name="settings-data-facilities" href="<?= base_url('settings/data/facilities'); ?>">Facilities</a></li>
-                    <!-- <li><a class="nav-link" name="" href="<?= base_url('settings/data/vehicle'); ?>">Vehicle</a></li> -->
-                    <!-- <li><a class="nav-link" name="" href="<?= base_url('settings/data/user'); ?>">User</a></li> -->
+                    <li><a class="nav-link" name="settings-data-facilities" href="<?= base_url('settings/data/facilities'); ?>">Facilities</a></li>                    
                 </ul>
             </li>
         </ul>
