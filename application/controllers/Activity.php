@@ -4,9 +4,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require_once (APPPATH.'controllers/Home.php');
 
 class Activity extends Home {
+	
+	public $user;
 
 	public function __construct(){
 		parent::__construct();
+		$this->user = $_SESSION['logged_in']['user'];
 	}
 	
 

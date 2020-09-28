@@ -2,35 +2,33 @@
 
 class User {
 
-    // static user, for development only
-    public $id = '201137';
-    public $name = 'iswanto';
-    // public $name = 'rizky';
-    // public $id = '170967';
+    public $id;
+    public $name;
+    public $department;
+    public $position;
+    public $branch;
+    public $privilege;
 
-    public $department = 'IT';
-    public $position = 'IT Staff';
-    public $head = 'IT Manager';
-    public $head_indirect = 'President Director';
+    public function __construct($user=null){
+        $this->setUser($user);
+    }
 
-    public $USER;
-
-    public function setUser($user = null){
-        $this->name = (!empty($user['name']) ? $this->name = $user['name'] : $this->name);
-        $this->id = (!empty($user['id']) ? $this->id = $user['id'] : $this->id);
-        $this->department = (!empty($user['department']) ? $this->department = $user['department'] : $this->department);
-        $this->position = (!empty($user['position']) ? $this->position = $user['position'] : $this->position);
-        $this->head = (!empty($user['head']) ? $this->head = $user['head'] : $this->head);
-        $this->head_indirect = (!empty($user['head_indirect']) ? $this->head_indirect = $user['head_indirect'] : $this->head_indirect);
+    public function setUser($user){
+        $this->id           = $user['id'];
+        $this->name         = $user['name'];
+        $this->department   = $user['department'];
+        $this->position     = $user['position'];
+        $this->branch       = $user['branch'];
+        $this->privilege    = $user['privilege'];
     }
 
     public function getUser(){
-        $user['name'] = $this->name;
-        $user['id'] = $this->id;
+        $user['id']         = $this->id;
+        $user['name']       = $this->name;
         $user['department'] = $this->department;
-        $user['position'] = $this->position;
-        $user['head'] = $this->head;
-        $user['head_indirect'] = $this->head_indirect;
+        $user['position']   = $this->position;
+        $user['branch']     = $this->branch;
+        $user['privilege']  = $this->privilege;
         return $user;
     }
 

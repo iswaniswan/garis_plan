@@ -20,23 +20,12 @@ class Calendar {
         $this->CI->load->Model('MNotification');
 
         $this->utils = new Utils();
-        $this->user = new User();
+        $this->user = $_SESSION['logged_in']['user'];
     }
-	
-	// public function get_all_data(){
-	// 	return $this->CI->MEvents->get(null, null, null, null);
-    // }
-
-    // public function get_user_event(){
-    //     $user = $this->user->id;
-    //     $where = '(type="global" or updated_by=' . $user . ') ';
-    //     return $this->CI->MEvents->get(null, $where, null, null);
-    // }
 
     public function get_user_event(){
-        $user = $this->user->id;
         $select_join = " * FROM events as e left join events_passive as ep on e.id = ep.event_id ";
-        $where = " (e.type='global' or e.updated_by=" . $user . " or ep.is_join=1) AND is_deleted=0 ";
+        $where = " (e.type='global' or e.updated_by=" . $this->user->id . " or ep.is_join=1) AND is_deleted=0 ";
         return $this->CI->MEvents->get_join($select_join, $where, null, null);
     }
     
@@ -74,11 +63,10 @@ class Calendar {
     }
 
     public function event_summary(){
-        $user = $this->user->id;
         $select_join = " count(e.id) as event_count, e.type, e.updated_by,
         ep.id as event_passive_id, ep.is_join, ep.is_cancel
         FROM events as e left join events_passive as ep on e.id = ep.event_id ";
-        $where = " (e.type='group' or e.type='global' or e.updated_by=" . $user ." or ep.is_join=1) AND is_deleted=0 ";
+        $where = " (e.type='group' or e.type='global' or e.updated_by=" . $this->user->id ." or ep.is_join=1) AND is_deleted=0 ";
         $group = " e.type ";
         $order = " e.updated_date desc ";
         return $this->CI->MEvents->get_join($select_join, $where, $group, $order);
@@ -91,31 +79,28 @@ class Calendar {
     }
 
     public function event_table(){
-        $user = $this->user->id;
         $select_join = " e.id, e.date_start, e.date_end, e.title, e.type, e.note, e.participant, e.room_id, e.branch, e.updated_by,
         ep.id as event_passive_id, ep.is_join, ep.is_cancel
         FROM events as e left join events_passive as ep on e.id = ep.event_id ";
-        $where = " (e.type='group' or e.updated_by=" . $user ." or ep.is_join=1) AND is_deleted=0 AND (e.date_end >= NOW()) ";
+        $where = " (e.type='group' or e.updated_by=" . $this->user->id ." or ep.is_join=1) AND is_deleted=0 AND (e.date_end >= NOW()) ";
         $order = " e.updated_date desc ";
         return $this->CI->MEvents->get_join($select_join, $where, null, $order);
     }
 
     public function event_table_past(){
-        $user = $this->user->id;
         $select_join = " e.id, e.date_start, e.date_end, e.title, e.type, e.note, e.participant, e.room_id, e.branch, e.updated_by,
         ep.id as event_passive_id, ep.is_join, ep.is_cancel
         FROM events as e left join events_passive as ep on e.id = ep.event_id ";
-        $where = " (e.type='group' or e.updated_by=" . $user ." or ep.is_join=1) AND is_deleted=0 AND (e.date_end < NOW())";
+        $where = " (e.type='group' or e.updated_by=" . $this->user->id ." or ep.is_join=1) AND is_deleted=0 AND (e.date_end < NOW())";
         $order = " e.updated_date desc ";
         return $this->CI->MEvents->get_join($select_join, $where, null, $order);
     }
 
     public function event_table_with_global(){
-        $user = $this->user->id;
         $select_join = " e.id, e.date_start, e.date_end, e.title, e.type, e.note, e.participant, e.room_id, e.branch, e.updated_by,
         ep.id as event_passive_id, ep.is_join, ep.is_cancel
         FROM events as e left join events_passive as ep on e.id = ep.event_id ";
-        $where = " ((e.type='group' AND ep.is_join=1) or e.updated_by=" . $user . " or e.type='global' or e.type='branch') AND is_deleted=0 ";
+        $where = " ((e.type='group' AND ep.is_join=1) or e.updated_by=" . $this->user->id . " or e.type='global' or e.type='branch') AND is_deleted=0 ";
         $order = " e.updated_date desc ";
         return $this->CI->MEvents->get_join($select_join, $where, null, $order);
     }

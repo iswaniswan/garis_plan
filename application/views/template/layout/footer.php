@@ -4,8 +4,7 @@
   <script src="<?= base_url('assets/vendor/bootstrap/4.3.1/bootstrap.min.js'); ?>"></script>
   <script src="<?= base_url('assets/vendor/jquery/jquery.nicescroll.min.js'); ?>"></script>
   <script src="<?= base_url('assets/vendor/moment/moment.min.js'); ?>"></script>
- 
-    -->
+
   <!-- JS Libraies -->
   <script src="<?= base_url('assets/vendor/jquery-sparkline/jquery.sparkline.min.js'); ?>"></script>
   <script src="<?= base_url('assets/vendor/chartjs/Chart.min.js'); ?>"></script>

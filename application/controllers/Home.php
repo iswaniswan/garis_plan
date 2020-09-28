@@ -8,6 +8,7 @@ require_once (APPPATH.'libraries/Utils.php');
 require_once (APPPATH.'libraries/Notification.php');
 require_once (APPPATH.'libraries/interface/User.php');
 require_once (APPPATH.'libraries/interface/Event.php');
+require_once (APPPATH.'libraries/Auth.php');
 
 class Home extends CI_Controller {
 
@@ -20,29 +21,54 @@ class Home extends CI_Controller {
 	public $calendar;
 	public $notification;
 
+	public $auth;
+
 	public function __construct(){
 		parent::__construct();
 		$this->load->library('session');
 		$this->load->library('parser');
 		$this->load->helper('url');
+		$this->load->Model('MUsers');
 		$this->room = new Room();
 		$this->facility = new Facility();
 		$this->calendar = new Calendar();
+		$this->user = new User(isset($_SESSION['logged_in']['user']));
 		$this->utils = new Utils();
-
-		$this->user = new User();
 		$this->event = new Event();
 		$this->eventP = new EventPassive();
 		$this->notification = new Notification();
 	}
 
-	// dashboard
-
 	public function index(){
-		// rest user
-		$data['user'] = $this->user;		
-		$this->load->view('index', $data);
+		$this->load->view('index');
 	}
+
+	public function login(){
+		$data['nik'] = $_POST['nik'];
+		$data['password'] = $_POST['password'];
+
+		$this->auth = new Auth();
+		$login = $this->auth->login($data);
+		if($login){
+			$user = $this->MUsers->__user($data['nik'])[0];
+
+			$log['login_time'] = $this->utils->dateTimeNow();
+			$log['ip'] = $this->utils->getUserIPAddress();
+
+			$session_data['log'] = $log;
+
+			$session_data['user'] = new User($user);
+			$this->session->set_userdata('logged_in', $session_data);
+		}
+		echo json_encode($login, true);
+	}
+
+	public function logout(){
+		$this->session->sess_destroy();
+		redirect('');
+	}
+
+	// dashboard
 
 	public function calendar(){
 		$data['t'] = $this->load->view('pages/dashboard/calendar', NULL);

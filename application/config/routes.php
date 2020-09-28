@@ -58,8 +58,12 @@ $route['translate_uri_dashes'] = FALSE;
  * custom route
  * 
  */
-$route['dashboard/calendar'] = '/';
 
+$route['/'] = 'Home/index';
+$route['auth/login'] = 'Home/login';
+$route['auth/logout'] = 'Home/logout';
+
+$route['dashboard/calendar'] = 'Home/calendar';
 // $route['activity/event/room'] = 'Home/activity_room';
 $route['activity/room/reservation/summary'] = 'Activity/room_reservation_summary';
 $route['activity/room/reservation/order'] = 'Activity/room_reservation_order';
@@ -90,3 +94,6 @@ $route['settings/data/vehicle'] = 'Settings/vehicle';
 $route['settings/data/user'] = 'Settings/user';
 
 $route['api/room'] = 'Activity/room_get_data';
+
+$route['api/users'] = 'Api/get_users';
+$route['api/user'] = 'Api/get_user_by_id';

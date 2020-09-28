@@ -16,9 +16,9 @@ class Notification {
         $this->CI->load->Model('MEvents');
         $this->CI->load->Model('MNotification');
 
-        $this->event = new Event();
-        $this->utils = new Utils();
-        $this->user = new User();
+        $this->event    = new Event();
+        $this->utils    = new Utils();
+        $this->user     = $_SESSION['logged_in']['user'];
     }
 	
 	public function get_user_notification_alert(){
