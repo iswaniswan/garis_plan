@@ -19,8 +19,14 @@ class Calendar {
         $this->CI->load->Model('MEventsPassive');
         $this->CI->load->Model('MNotification');
 
-        $this->utils = new Utils();
-        $this->user = $_SESSION['logged_in']['user'];
+        $this->utils    = new Utils();
+        $this->user     = $this->currentUser();
+    }
+
+    public function currentUser(){
+        if (isset($_SESSION['logged_in']['user'])){
+            return $_SESSION['logged_in']['user'];
+        }
     }
 
     public function get_user_event(){

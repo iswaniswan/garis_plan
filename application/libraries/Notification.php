@@ -18,7 +18,13 @@ class Notification {
 
         $this->event    = new Event();
         $this->utils    = new Utils();
-        $this->user     = $_SESSION['logged_in']['user'];
+        $this->user     = $this->currentUser();
+    }
+
+    public function currentUser(){
+        if (isset($_SESSION['logged_in']['user'])){
+            return $_SESSION['logged_in']['user'];
+        }
     }
 	
 	public function get_user_notification_alert(){
@@ -50,8 +56,7 @@ class Notification {
             $i++;
         }
         // echo json_encode($notif);
-        $result = ($notif != null ? $notif : null);
-        return $result;
+        return $notif;
     }
 
     public function get_all_past_notification_by_user(){

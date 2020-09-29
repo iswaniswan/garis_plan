@@ -36,9 +36,14 @@
                         <h4>Upcoming schedule</h4>
                     </div>
                     <div class="card-body">
-                    <div class="fc-overflow">
-                        <div id="schedule-next"></div>
+                        <div class="fc-overflow">
+                            <div id="schedule-next"></div>
+                        </div>
                     </div>
+                    <div class="card-footer text-right">
+                        <a href="#" class="" id="lnk-activity-event">more
+                            <i class="fa fa-arrow-right"></i>
+                        </a>                        
                     </div>
                 </div>
             </div>
@@ -50,9 +55,14 @@
                         <h4>Last events</h4>
                     </div>
                     <div class="card-body">
-                    <div class="fc-overflow">
-                        <div id="schedule-prev"></div>
+                        <div class="fc-overflow">
+                            <div id="schedule-prev"></div>
+                        </div>
                     </div>
+                    <div class="card-footer text-right">
+                        <a href="#" class="" id="lnk-report-event">more
+                            <i class="fa fa-arrow-right"></i>
+                        </a>                        
                     </div>
                 </div>
             </div>
@@ -69,6 +79,15 @@
 <script type="text/javascript">
     $(document).ready(function(){
         loadEvents();    
+
+        $('#lnk-activity-event').bind('click', function(){
+            $('a[name="activity-event-table"]').trigger('click');
+        })
+
+        $('#lnk-report-event').bind('click', function(){
+            $('a[name="report-event"]').trigger('click');
+        })
+
     })
 </script>
 <script type="module" defer>
